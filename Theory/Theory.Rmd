@@ -1,0 +1,561 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+### Argomenti esame (To be completed): 
+
+Anova, Residui, Formule, Correlazione tra variabili, Predict, più modelli, scegliere le variaibili di un modello.
+
+## Analisi dei residui:  
+
+Serve a verificare se il modello soddisfa le assunzioni della regressione e per identificare eventuali pattern o problemi nei dati.
+
+Esempio 1:
+
+```{r}
+# Generiamo dati casuali con residui normalmente distribuiti
+set.seed(123)
+x <- 1:100
+y <- 2 * x + rnorm(100)
+
+# Adattiamo un modello di regressione
+model <- lm(y ~ x)
+
+# Effettuiamo l'analisi dei residui
+residuals <- residuals(model)
+
+# Creiamo un grafico dei residui
+plot(residuals, main = "Distribuzione Normale dei Residui", xlab = "Residui")
+abline(h = 0, col = "red")
+```
+
+In questo caso, i residui seguono una distribuzione normale, il che è un risultato ideale per un modello di regressione lineare.
+
+Esempio 2:
+
+```{r}
+# Generiamo dati casuali con residui che seguono una distribuzione a U
+set.seed(456)
+x <- 1:100
+y <- 2 * x + rnorm(100)
+y[50:60] <- y[50:60] + 10  # Introduciamo un effetto a U nei dati
+
+# Adattiamo un modello di regressione
+model <- lm(y ~ x)
+
+# Effettuiamo l'analisi dei residui
+residuals <- residuals(model)
+
+# Creiamo un grafico di dispersione dei residui rispetto ai valori previsti
+plot(predict(model), residuals, main = "Distribuzione a U dei Residui", xlab = "Valori Previsti", ylab = "Residui")
+abline(h = 0, col = "red")
+```
+
+In questo caso, i residui mostrano un effetto a U, indicando una violazione dell'assunzione di omoschedasticità.
+
+Esempio 3:
+
+```{r}
+# Generiamo dati casuali con outlier nei residui
+set.seed(789)
+x <- 1:100
+y <- 2 * x + rnorm(100)
+y[c(20, 85)] <- y[c(20, 85)] + 20  # Aggiungiamo outlier nei dati
+
+# Adattiamo un modello di regressione
+model <- lm(y ~ x)
+
+# Effettuiamo l'analisi dei residui
+residuals <- residuals(model)
+
+# Creiamo un grafico dei residui
+plot(residuals, main = "Presenza di Outlier nei Residui", xlab = "Residui")
+abline(h = 0, col = "red")
+```
+
+In questo caso, i residui mostrano la presenza di outlier evidenti, che possono influenzare in modo significativo la stima dei coefficienti del modello.
+
+## Correlazione di Pearson: 
+
+Serve a vedere se due variabili hanno una correlazione lineare o meno. Questo perché non tutte le variabili correlate hanno una relazione lineare.
+
+```{r}
+# Esempio dati casuali
+set.seed(123)
+x <- rnorm(100)  # Variabile x
+y <- 2 * x + rnorm(100)  # Variabile y (correlata a x)
+
+# Calcola la correlazione di Pearson
+correlation <- cor(x, y)
+
+# Stampa il valore di correlazione
+cat("Correlazione di Pearson tra x e y:", correlation, "\n")
+```
+
+In questo esempio, stiamo generando dati casuali per le variabili x e y. La variabile y è costruita come una trasformazione lineare di x con un termine di errore aggiunto. Poi, utilizziamo la funzione cor() per calcolare la correlazione di Pearson tra x e y.
+
+Il valore di correlazione verrà stampato a schermo. Un valore vicino a 1 indica una correlazione positiva forte, un valore vicino a -1 indica una correlazione negativa forte, mentre un valore vicino a 0 indica una scarsa correlazione tra le due variabili.
+
+## Decomposition sum of squares: 
+
+La "decomposition of sum of squares" (scomposizione della somma dei quadrati) è un concetto fondamentale nell'analisi della varianza (ANOVA) e nella regressione statistica. Questa tecnica aiuta a scomporre la varianza totale osservata in un insieme di dati in diverse componenti, consentendo di comprendere quanto della varianza può essere attribuito a vari fattori o errori residui. La formula chiave in questo contesto è:
+
+Varianza Totale = Varianza Spiegata + Varianza Residua
+
+Dove:
+
+Varianza Totale è la varianza complessiva dei dati, cioè quanto i dati variano in generale.
+
+Varianza Spiegata rappresenta la varianza dovuta al modello o ai fattori esaminati (spiegati dalla variabile indipendente nel contesto della regressione).
+
+Varianza Residua è la varianza non spiegata dal modello o dai fattori ed è associata all'errore residuo, ovvero la differenza tra i valori osservati e quelli previsti dal modello.
+
+Nel contesto della regressione, puoi rappresentare la decomposizione della somma dei quadrati come segue:
+
+SST = SSR + SSE
+
+SST (Sum of Squares Total) rappresenta la somma dei quadrati totale ed è la varianza dei dati osservati rispetto alla loro media.
+
+SSR (Sum of Squares Regression) rappresenta la varianza spiegata dal modello o dalla variabile indipendente.
+
+SSE (Sum of Squares Error) rappresenta la varianza residua, ossia la varianza non spiegata dal modello.
+
+Per valutare l'efficienza del tuo modello di regressione, dovresti guardare la proporzione di questa varianza spiegata dal tuo modello (SSR). In generale, vuoi massimizzare la proporzione spiegata e minimizzare la proporzione non spiegata (SSE). Pertanto, punti a minimizzare SSE.
+
+```{r}
+data <- data.frame(X = c(1, 2, 3, 4, 5), Y = c(3, 5, 6, 8, 10))
+mean_Y <- mean(data$Y)
+SST <- sum((data$Y - mean_Y)^2)
+
+# Adatta il modello di regressione lineare
+model <- lm(Y ~ X, data = data)
+
+# Calcola la SSR
+SSR <- sum((predict(model) - mean_Y)^2)
+
+# Calcola la SSE
+SSE <- sum(model$residuals^2)
+
+R_squared <- SSR / SST
+
+# Equivale a fare summary(model)
+```
+
+
+## Optimal Prediction
+
+L'argomento dell'"Optimal Prediction" (predizione ottimale) riguarda la determinazione di un modello predittivo che sia il migliore possibile in termini di accuratezza nel prevedere gli eventi futuri. Questo concetto è ampiamente utilizzato in diversi campi, come la statistica, l'apprendimento automatico, l'economia e molte altre discipline.
+
+L'obiettivo principale dell'optimal prediction è trovare il modello che massimizza la precisione delle previsioni, minimizzando l'errore di previsione. Ci sono vari metodi e tecniche per ottenere la predizione ottimale, a seconda del contesto e dei dati disponibili.
+
+```{r}
+# Caricamento del dataset "cars"
+data(cars)
+
+# Visualizzazione delle prime righe del dataset
+head(cars)
+
+# Dividiamo il dataset in set di addestramento e set di test
+set.seed(123)  # Impostiamo un seed per la riproducibilità
+sample_indices <- sample(nrow(cars), nrow(cars) * 0.7)  # 70% dati di addestramento
+train_data <- cars[sample_indices, ]
+test_data <- cars[-sample_indices, ]
+
+# Adattamento di un modello di regressione lineare
+model <- lm(dist ~ speed, data = train_data)
+
+# Predizioni
+predictions <- predict(model, newdata = test_data)
+
+# Valutazione delle prestazioni
+model_summary <- summary(model)
+r_squared <- model_summary$r.squared
+
+cat("R-squared:", r_squared, "\n")
+
+# Grafico dei risultati
+library(ggplot2)
+ggplot(data = test_data, aes(x = speed, y = dist)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  ggtitle("Predizione della Distanza di Arresto")
+
+```
+
+## Empirical Covariance and Correlation
+
+L'empirical covariance e la correlazione empirica sono misure statistiche utilizzate per quantificare la relazione tra due variabili in un insieme di dati osservati. Queste misure sono strettamente legate e sono spesso utilizzate per esaminare la relazione lineare tra due variabili.
+
+### Empirical Covariance (Covarianza Empirica):
+La covarianza empirica è una misura della tendenza di due variabili a variare insieme. Indica se le due variabili crescono o diminuiscono simultaneamente (covarianza positiva) o se una aumenta mentre l'altra diminuisce (covarianza negativa).
+La formula per calcolare la covarianza empirica tra due variabili X e Y in un set di dati è data da:
+
+$$  Cov(X,Y) = \frac{1}{n-1} \sum_{i = 1}^n {(X_i - \overline{X})(Y_i - \overline{Y})} $$
+
+### Empirical Correlation (Correlazione Empirica):
+La correlazione empirica è una versione standardizzata della covarianza empirica e misura la forza e la direzione di una relazione lineare tra due variabili. La correlazione empirica è sempre compresa tra -1 e 1.
+La formula per calcolare la correlazione empirica (il coefficiente di correlazione di Pearson) tra due variabili X e Y è data da:
+
+$$  Cor(X,Y) = \frac{Cov(X,Y)}{S_X \cdot S_Y} $$
+
+Le misure di covarianza empirica e correlazione empirica sono utilizzate per esaminare la relazione tra variabili in un set di dati e sono particolarmente utili nell'analisi statistica e nell'apprendimento automatico per valutare le associazioni tra le variabili prima di costruire modelli predittivi. La correlazione empirica è più comunemente utilizzata perché fornisce una misura standardizzata della relazione tra variabili ed è meno influenzata dall'unità di misura.
+
+## Multiple Linear Regression
+
+
+La "Multiple Linear Regression" (Regressione Lineare Multipla) è una tecnica di modellazione statistica utilizzata per analizzare la relazione tra una variabile dipendente (o target) e due o più variabili indipendenti (o predittive). Questa tecnica estende la semplice regressione lineare, che coinvolge solo una variabile indipendente, a un contesto in cui più variabili indipendenti sono coinvolte nel modello. La regressione lineare multipla è ampiamente utilizzata nell'analisi statistica e nell'apprendimento automatico per fare previsioni o comprendere le relazioni complesse tra variabili.
+
+$$ Y = \beta_0 + \beta_1X_1 + ... + \beta_nX_n + \epsilon $$
+L'obiettivo principale è stimare i coefficienti β in modo che il modello si adatti meglio ai dati osservati.
+Questo viene fatto utilizzando metodi di stima, come il metodo dei minimi quadrati, che cerca di minimizzare la somma dei quadrati degli errori residui.
+Il modello di regressione viene valutato utilizzando metriche di valutazione delle prestazioni come l'errore quadratico medio (RMSE), il coefficiente di determinazione (R-squared) e altri.
+È importante eseguire test di significatività statistica per i coefficienti delle variabili indipendenti per determinare se esse contribuiscono significativamente al modello.
+
+La regressione lineare multipla è basata su alcune assunzioni, tra cui l'indipendenza degli errori, l'omoschedasticità (varianza costante degli errori), la linearità della relazione e la normalità degli errori.
+
+```{r}
+# Carica il dataset mtcars
+data(mtcars)
+
+# Visualizza le prime righe del dataset
+head(mtcars)
+
+# Adattamento del modello di regressione lineare multipla
+model <- lm(mpg ~ wt + hp + qsec, data = mtcars)
+
+# Visualizza un riepilogo del modello
+summary(model)
+
+# Effettua previsioni con il modello
+predictions <- predict(model, newdata = mtcars)
+
+# Valuta le prestazioni del modello
+SSR <- sum((mtcars$mpg - predictions)^2)  # Somma dei quadrati residui
+SST <- sum((mtcars$mpg - mean(mtcars$mpg))^2)  # Somma totale dei quadrati
+
+R_squared <- 1 - (SSR / SST)
+
+cat("R-squared (manual calculation):", R_squared, "\n")
+```
+
+In sintesi, il modello di regressione lineare multipla suggerisce che il peso del veicolo influenza il consumo di carburante. La potenza del motore e il tempo di accelerazione non sono significative per la spiegazione di questo modello. Nonostante ciò il modello spiega l'83% dei della variazione nei consumi di carburante.
+
+
+## Matrix approach to Regression
+
+L'approccio matriciale alla regressione è una forma alternativa di rappresentazione e risoluzione dei modelli di regressione, inclusa la regressione lineare. Questo approccio utilizza notazioni matematiche e matrici per semplificare i calcoli e ottenere soluzioni più efficienti in problemi di regressione lineare.
+
+Ci permette di passare da: 
+$$ Y = \beta_0 + \beta_1X_1 + ... + \beta_nX_n + \epsilon $$
+a : 
+$$ Y = \beta X + \epsilon   $$
+
+er stimare i coefficienti β del modello, si utilizzano metodi come il metodo dei minimi quadrati. L'obiettivo è trovare i valori di β che minimizzano la somma dei quadrati degli errori (ε).
+
+a soluzione matriciale per stimare i coefficienti β é: $$ \beta = ((X^T X)^{-1} X^T Y) $$
+
+L'approccio matriciale semplifica la rappresentazione e la risoluzione dei modelli di regressione, specialmente quando si lavora con più variabili indipendenti. Inoltre, è utile per comprendere come eseguire calcoli di regressione in modo più efficiente utilizzando matrici e algebra lineare, specialmente in contesti di apprendimento automatico in cui le dimensioni dei dati possono essere elevate.
+
+```{r}
+# Carica il dataset mtcars
+data(mtcars)
+
+# Visualizza le prime righe del dataset
+head(mtcars)
+
+# Crea la matrice delle variabili indipendenti
+X <- as.matrix(mtcars[, c("wt", "hp", "qsec")])
+
+# Aggiungi una colonna di 1 per l'intercetta
+X <- cbind(1, X)
+
+# Crea il vettore delle variabili dipendenti
+Y <- mtcars$mpg
+
+# Calcola i coefficienti del modello utilizzando l'approccio matriciale
+beta <- solve(t(X) %*% X) %*% t(X) %*% Y
+
+# Visualizza i coefficienti
+cat("Coefficienti del modello:")
+print(beta)
+
+# Effettua previsioni con il modello matriciale
+predictions <- X %*% beta
+
+# Valuta le prestazioni del modello
+model <- lm(Y ~ 0 + predictions)  # 0 indica di non calcolare l'intercetta
+summary(model)$r.squared  # Restituisce il valore di R-squared
+```
+
+
+- Il peso del veicolo sembra essere il fattore più significativo nella determinazione del consumo di carburante. Aumenti del peso del veicolo sono associati a diminuzioni significative nel consumo di carburante.
+- La potenza del motore ha un effetto molto piccolo, con un aumento di potenza associato a un consumo di carburante leggermente più basso.
+- Il tempo di accelerazione ha un effetto positivo, con un tempo di accelerazione più lungo associato a un consumo di carburante più alto.
+
+
+## Geometrical Interpretation
+
+L'interpretazione geometrica della regressione lineare è un approccio concettuale che utilizza uno spazio tridimensionale (o superiore) per rappresentare visivamente il modello di regressione. In questo spazio, ogni punto rappresenta un'osservazione nel dataset, e un piano (o iperpiano) rappresenta il modello di regressione. L'obiettivo è trovare il piano (o iperpiano) che minimizza la somma dei quadrati delle distanze verticali tra i punti dati e il piano (o iperpiano). Questo fornisce una visualizzazione intuitiva di come i coefficienti del modello vengono stimati per ottenere la migliore "ajustement" ai dati, minimizzando gli errori residui. L'interpretazione geometrica aiuta a comprendere i principi fondamentali della regressione lineare e può essere applicata a problemi più complessi con più variabili indipendenti.
+
+```{r}
+# Genera dati casuali
+set.seed(123)
+n <- 50
+X1 <- rnorm(n)
+X2 <- rnorm(n)
+Y <- 2 * X1 + 3 * X2 + rnorm(n)
+
+# Crea un dataframe con le variabili
+data <- data.frame(X1, X2, Y)
+
+# Adatta il modello di regressione lineare
+model <- lm(Y ~ X1 + X2, data = data)
+
+# Estrai i coefficienti stimati
+coefficients <- coef(model)
+
+# Visualizza i coefficienti
+print(coefficients)
+
+# Grafico dei dati e del piano di regressione
+library(rgl)
+
+# Creazione di una griglia di punti
+x1_range <- seq(min(X1), max(X1), length = 20)
+x2_range <- seq(min(X2), max(X2), length = 20)
+grid <- expand.grid(X1 = x1_range, X2 = x2_range)
+
+# Calcolo delle previsioni del modello sulla griglia
+grid$Y_pred <- predict(model, newdata = grid)
+
+# Creazione del plot 3D
+plot3d(data$X1, data$X2, data$Y, type = "s", size = 0.5, col = "blue", xlab = "X1", ylab = "X2", zlab = "Y")
+surface3d(x = x1_range, y = x2_range, z = matrix(grid$Y_pred, nrow = length(x1_range)), color = "red", alpha = 0.7)
+```
+
+L'interpretazione geometrica ci consente di vedere come il piano di regressione si adatta ai dati nello spazio tridimensionale e come i coefficienti stimati influenzano la posizione e l'inclinazione del piano rispetto ai dati osservati. Questo fornisce una visualizzazione intuitiva della relazione tra le variabili indipendenti e dipendenti nel contesto della regressione lineare.
+
+
+## Distribuzione F & Anova Table
+
+La "distribuzione F" è una distribuzione di probabilità usata per confrontare varianze o dispersioni tra gruppi o modelli di regressione. Viene ampiamente utilizzata nell'analisi statistica, in particolare nelle analisi della varianza (ANOVA) e nei test di significatività dei modelli di regressione.
+
+La "tabella ANOVA" è uno strumento che calcola le varianze spiegate e non spiegate nei dati, consentendo di testare se ci sono differenze significative tra gruppi o fattori. La tabella ANOVA mostra la varianza tra gruppi e la varianza all'interno dei gruppi e calcola il "rapporto F", che viene utilizzato per valutare la significatività delle differenze.
+
+In sintesi, la distribuzione F e la tabella ANOVA sono strumenti fondamentali nell'analisi statistica per testare e valutare le differenze tra gruppi o modelli di regressione.
+
+
+Esempio 1:
+
+```{r}
+# Creiamo un dataset fittizio
+set.seed(123)
+data <- data.frame(
+  Gruppo = rep(c("A", "B", "C"), each = 20),
+  Punteggio = rnorm(60, mean = c(70, 75, 80), sd = 5)
+)
+
+# Eseguiamo l'ANOVA
+anova_result <- aov(Punteggio ~ Gruppo, data = data)
+
+# Visualizziamo la tabella ANOVA
+summary(anova_result)
+
+# Calcoliamo il rapporto F
+f_statistic <- summary(anova_result)[[1]][["F value"]][1]
+
+# Calcoliamo il p-value associato al rapporto F
+p_value <- pf(f_statistic, df1 = 2, df2 = 57, lower.tail = FALSE)
+
+cat("Rapporto F:", f_statistic, "\n")
+cat("Valore p:", p_value, "\n")
+```
+
+In questo esempio, eseguiamo un'ANOVA a un fattore per valutare le differenze nei punteggi tra i gruppi A, B e C. Il rapporto F e il valore p ci permettono di determinare se le differenze tra i gruppi sono statisticamente significative.
+
+
+Esempio 2:
+
+```{r}
+# Creiamo un dataset fittizio
+set.seed(123)
+data <- data.frame(
+  Genere = rep(c("Maschio", "Femmina"), each = 50),
+  Trattamento = rep(c("A", "B"), times = 50),
+  Punteggio = rnorm(100, mean = c(75, 80), sd = 5)
+)
+
+# Eseguiamo l'ANOVA a due fattori
+anova_result <- aov(Punteggio ~ Genere * Trattamento, data = data)
+
+# Visualizziamo la tabella ANOVA
+summary(anova_result)
+```
+
+In questo esempio, eseguiamo un'ANOVA a due fattori per esaminare le differenze nei punteggi in base al genere e al trattamento. La tabella ANOVA ci mostra se ci sono interazioni significative tra questi due fattori.
+
+- Un valore F maggiore di 1 suggerisce che i parametri o i fattori sono significativi, poiché la varianza spiegata è maggiore della varianza non spiegata.
+- Un valore F vicino a 1 indica che il modello non spiega in modo significativo la variabilità nei dati.
+- Il valore p associato all'F-value fornisce la probabilità che i risultati osservati siano dovuti al caso. Un valore p basso (di solito inferiore a 0.05) indica una significatività elevata, mentre un valore p alto suggerisce una mancanza di significatività.
+
+La valutazione della significatività dipende da entrambi i valori F e p, e il livello di significatività scelto è basato sulla specifica analisi e sulle convenzioni del campo di studio.
+
+### Ipotesi
+
+Nell'analisi statistica in cui si calcola un valore F, ci sono due ipotesi principali: l'ipotesi nulla (H0) e l'ipotesi alternativa (H1).
+
+Ipotesi Nulla (H0):
+L'ipotesi nulla afferma che non ci sono differenze significative tra i gruppi o i fattori considerati. In altre parole, l'ipotesi nulla sostiene che i parametri del modello o i fattori non hanno un effetto significativo sul risultato o che le differenze osservate sono casuali. Nel contesto dell'analisi con un valore F, l'H0 suggerirebbe che non ci sono differenze significative tra i gruppi o i fattori.
+
+Ipotesi Alternativa (H1 o HA):
+L'ipotesi alternativa è il contrario dell'ipotesi nulla. Sostiene che ci sono differenze significative tra i gruppi o i fattori considerati, e che le differenze osservate non sono casuali, ma sono dovute a un effetto significativo dei parametri del modello o dei fattori. Nel contesto dell'analisi con un valore F, l'ipotesi alternativa suggerirebbe che ci sono differenze significative tra i gruppi o i fattori.
+
+Quindi, quando si calcola un valore F e si esegue un test statistico, l'ipotesi nulla (H0) è che non ci siano differenze significative, mentre l'ipotesi alternativa (H1 o HA) è che ci siano differenze significative. L'obiettivo del test F è determinare se i dati forniscono prove sufficienti per respingere l'ipotesi nulla a favore dell'ipotesi alternativa, indicando che ci sono differenze significative tra i gruppi o i fattori considerati.
+
+```{r}
+# Creiamo tre campioni di dati (simulati)
+set.seed(123)
+gruppo_A <- rnorm(30, mean = 50, sd = 5)
+gruppo_B <- rnorm(30, mean = 55, sd = 5)
+gruppo_C <- rnorm(30, mean = 60, sd = 5)
+
+# Creiamo un dataframe con i dati
+data <- data.frame(
+  Gruppo = rep(c("A", "B", "C"), each = 30),
+  Valore = c(gruppo_A, gruppo_B, gruppo_C)
+)
+
+# Eseguiamo un'ANOVA
+anova_result <- aov(Valore ~ Gruppo, data = data)
+
+# Visualizziamo la tabella ANOVA
+summary(anova_result)
+
+# Estraiamo il valore F
+f_statistic <- summary(anova_result)[[1]][["F value"]][1]
+
+# Estraiamo il valore p
+p_value <- summary(anova_result)[[1]][["Pr(>F)"]][1]
+
+cat("Valore F:", f_statistic, "\n")
+cat("Valore p:", p_value, "\n")
+
+# Scegliamo un livello di significatività (alpha)
+alpha <- 0.05
+
+# Valutiamo se rifiutare l'ipotesi nulla
+if (p_value < alpha) {
+  cat("Rifiutiamo l'ipotesi nulla. Ci sono differenze significative tra i gruppi.\n")
+} else {
+  cat("Non rifiutiamo l'ipotesi nulla. Non ci sono differenze significative tra i gruppi.\n")
+}
+```
+
+## Nested Models
+
+Nei modelli statistici, un "nested model" (modello nidificato) si verifica quando un modello più complesso o generale può essere suddiviso o semplificato in un modello più semplice o specifico. Il modello più semplice è considerato "nidificato" all'interno del modello più complesso, poiché contiene un sottoinsieme di parametri o vincoli del modello più generale.
+
+Nel contesto della regressione, i modelli nidificati sono spesso utilizzati per testare l'aggiunta di variabili indipendenti al modello al fine di valutare se le variabili aggiuntive migliorano significativamente la capacità di previsione o spiegazione del modello. I modelli nidificati sono anche utilizzati in contesti come l'analisi della varianza (ANOVA), l'analisi della devianza nei modelli lineari generalizzati (GLM) e altre procedure statistiche.
+
+Ecco un esempio per chiarire il concetto di modelli nidificati:
+
+Esempio di Modelli di Regressione Nidificati:
+
+Supponiamo di voler creare un modello di regressione per prevedere il reddito di una persona basandoci su tre variabili indipendenti: età, istruzione e esperienza lavorativa. Il modello completo potrebbe essere:
+
+1 - Modello Completo
+
+$$ Reddito = \beta_0 + \beta_1 \cdot Età + \beta_2 \cdot Istruzione + \beta_3 \cdot Esperienza $$
+Tuttavia, potremmo essere interessati a valutare se l'aggiunta della variabile "genere" migliora significativamente la capacità predittiva del modello. In tal caso, il modello con "genere" è nidificato all'interno del modello completo:
+
+2 - Modello Nidificato
+
+$$ Reddito = \beta_0 + \beta_1 \cdot Età + \beta_2 \cdot Istruzione + \beta_3 \cdot Esperienza + \beta_4 \cdot Genere $$
+
+In questo esempio, il Modello 1 è il modello completo e il Modello 2 è il modello nidificato con un parametro aggiuntivo per "genere". Per confrontare questi modelli, si può utilizzare il test F per determinare se l'aggiunta di "genere" contribuisce in modo significativo alla spiegazione della variazione nei redditi. Se il test F mostra che il modello completo è significativamente migliore del modello nidificato, possiamo concludere che "genere" è un predittore significativo.
+
+In sintesi, i modelli nidificati sono utilizzati per valutare l'aggiunta o la rimozione di variabili o parametri nei modelli statistici al fine di determinare se tali modifiche migliorano significativamente la bontà di adattamento o la capacità predittiva del modello.
+
+
+```{r}
+# Creiamo dati fittizi
+set.seed(123)
+n <- 100
+eta <- rnorm(n, mean = 35, sd = 5)
+istruzione <- rnorm(n, mean = 12, sd = 2)
+esperienza <- rnorm(n, mean = 10, sd = 3)
+genere <- sample(c("Maschio", "Femmina"), n, replace = TRUE)
+reddito <- 20 + 2 * eta + 3 * istruzione + 5 * esperienza + ifelse(genere == "Maschio", 4, 0) + rnorm(n, mean = 0, sd = 5)
+
+# Creiamo un dataframe con i dati
+data <- data.frame(eta, istruzione, esperienza, genere, reddito)
+
+# Modello completo
+modello_completo <- lm(reddito ~ eta + istruzione + esperienza + genere, data = data)
+
+# Modello nidificato senza "genere"
+modello_nidificato <- lm(reddito ~ eta + istruzione + esperienza, data = data)
+
+# Test F per confrontare i modelli
+anova_result <- anova(modello_nidificato, modello_completo)
+
+# Visualizziamo la tabella ANOVA
+print(anova_result)
+
+# Scegliamo un livello di significatività (alpha)
+alpha <- 0.05
+
+# Valutiamo se rifiutare l'ipotesi nulla
+if (anova_result[2, "Pr(>F)"] < alpha) {
+  cat("Rifiutiamo l'ipotesi nulla. L'aggiunta di 'genere' migliora significativamente il modello.\n")
+} else {
+  cat("Non rifiutiamo l'ipotesi nulla. L'aggiunta di 'genere' non migliora significativamente il modello.\n")
+}
+```
+
+## Variable Selection in R
+
+La "variable selection" (selezione delle variabili) in R è un processo attraverso il quale si scelgono le variabili più rilevanti da includere in un modello statistico. Questo processo è utile per semplificare i modelli, migliorare la capacità predittiva e la comprensione dei dati, ridurre l'overfitting e aumentare l'efficienza computazionale.
+
+Un metodo comune per la selezione delle variabili in R coinvolge l'utilizzo dell'Information Criterion (Criterio d'Informazione) di Akaike (AIC) insieme alla funzione step().
+
+AIC (Akaike's Information Criterion):
+
+Il Criterio d'Informazione di Akaike (AIC) è una metrica che misura la qualità di un modello statistico. L'obiettivo dell'AIC è trovare il miglior compromesso tra la bontà di adattamento del modello ai dati e la sua complessità. L'AIC tiene conto della funzione di verosimiglianza del modello e penalizza i modelli con un numero maggiore di parametri. L'AIC è definito come:
+
+$$ AIC = -2 \cdot log-likelihood + 2 \cdot k $$
+
+Dove:
+
+- "log-likelihood" è il logaritmo della funzione di verosimiglianza del modello.
+- "k" è il numero di parametri stimati nel modello.
+Un valore AIC più basso indica un modello migliore, in quanto indica un migliore adattamento ai dati con meno complessità.
+
+Funzione step():
+
+La funzione step() in R è utilizzata per effettuare la selezione delle variabili basata su criteri come l'AIC. Consente di confrontare e selezionare i modelli in modo automatico aggiungendo o rimuovendo variabili dal modello, fino a trovare il modello con l'AIC più basso. La sintassi di base della funzione step() è la seguente:
+
+```{r}
+#step(modello_iniziale, direction = "both", scope = list(lower = modello_minimo, upper = modello_massimo))
+```
+
+- modello_iniziale è il modello di partenza che desideri semplificare o migliorare.
+- direction può essere "forward", "backward", o "both" e specifica se aggiungere, rimuovere o entrambi i tipi di variabili durante la selezione.
+- scope specifica l'intervallo dei modelli da considerare durante la selezione. Il - "modello_minimo" rappresenta il modello più semplice possibile (ad esempio, un modello con solo l'intercetta), mentre il "modello_massimo" rappresenta il modello più complesso (il modello completo con tutte le variabili).
+
+```{r}
+# Carica il dataset di esempio
+data(mtcars)
+
+# Crea un modello lineare iniziale
+modello_iniziale <- lm(mpg ~ ., data = mtcars)
+
+# Esegui la selezione delle variabili basata su AIC
+modello_selezionato <- step(modello_iniziale, direction = "both")
+```
+
+In questo esempio, partiamo da un modello lineare completo che utilizza tutte le variabili di mtcars, e poi utilizziamo step() per eseguire la selezione delle variabili basata su AIC. Alla fine, otteniamo il modello con l'AIC più basso, che dovrebbe essere una versione semplificata del modello iniziale con solo le variabili più rilevanti.
+
+La "variable selection" utilizzando AIC e step() è un potente strumento per migliorare la qualità e l'interpretabilità dei modelli statistici, in particolare quando si hanno molti potenziali predittori.
+
