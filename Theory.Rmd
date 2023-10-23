@@ -31,6 +31,7 @@ abline(h = 0, col = "red")
 ```
 
 In questo caso, i residui seguono una distribuzione normale, il che è un risultato ideale per un modello di regressione lineare.
+Quando diciamo che i residui hanno una distribuzione normale, significa che i residui seguono una distribuzione a forma di campana, con una media di zero e una varianza costante. Questa è un'importante assunzione nei modelli di regressione lineare, in quanto indica che gli errori casuali nel modello sono distribuiti in modo simmetrico intorno a zero e non mostrano alcun tipo di tendenza sistemica. Se questa assunzione è soddisfatta, i test di significatività dei coefficienti del modello e le stime di intervallo di confidenza saranno affidabili.
 
 Esempio 2:
 
@@ -38,7 +39,7 @@ Esempio 2:
 # Generiamo dati casuali con residui che seguono una distribuzione a U
 set.seed(456)
 x <- 1:100
-y <- 2 * x + rnorm(100)
+y <- 2 * x^2 + rnorm(100)
 y[50:60] <- y[50:60] + 10  # Introduciamo un effetto a U nei dati
 
 # Adattiamo un modello di regressione
@@ -52,7 +53,8 @@ plot(predict(model), residuals, main = "Distribuzione a U dei Residui", xlab = "
 abline(h = 0, col = "red")
 ```
 
-In questo caso, i residui mostrano un effetto a U, indicando una violazione dell'assunzione di omoschedasticità.
+In questo caso, i residui mostrano un effetto a U, indicando una violazione dell'assunzione di omoschedasticità(i residui non mostrano un aumento o una diminuzione sistematica nella dispersione al variare dei valori delle variabili indipendenti).
+
 
 Esempio 3:
 
@@ -75,51 +77,31 @@ abline(h = 0, col = "red")
 ```
 
 In questo caso, i residui mostrano la presenza di outlier evidenti, che possono influenzare in modo significativo la stima dei coefficienti del modello.
-
-## Correlazione di Pearson: 
-
-Serve a vedere se due variabili hanno una correlazione lineare o meno. Questo perché non tutte le variabili correlate hanno una relazione lineare.
-
-```{r}
-# Esempio dati casuali
-set.seed(123)
-x <- rnorm(100)  # Variabile x
-y <- 2 * x + rnorm(100)  # Variabile y (correlata a x)
-
-# Calcola la correlazione di Pearson
-correlation <- cor(x, y)
-
-# Stampa il valore di correlazione
-cat("Correlazione di Pearson tra x e y:", correlation, "\n")
-```
-
-In questo esempio, stiamo generando dati casuali per le variabili x e y. La variabile y è costruita come una trasformazione lineare di x con un termine di errore aggiunto. Poi, utilizziamo la funzione cor() per calcolare la correlazione di Pearson tra x e y.
-
-Il valore di correlazione verrà stampato a schermo. Un valore vicino a 1 indica una correlazione positiva forte, un valore vicino a -1 indica una correlazione negativa forte, mentre un valore vicino a 0 indica una scarsa correlazione tra le due variabili.
+Gli outlier possono comportare problemi nei modelli statistici, specialmente nei modelli di regressione, perché possono influenzare notevolmente i risultati. Ad esempio, possono influenzare la stima dei coefficienti del modello e rendere il modello meno affidabile.
 
 ## Decomposition sum of squares: 
 
 La "decomposition of sum of squares" (scomposizione della somma dei quadrati) è un concetto fondamentale nell'analisi della varianza (ANOVA) e nella regressione statistica. Questa tecnica aiuta a scomporre la varianza totale osservata in un insieme di dati in diverse componenti, consentendo di comprendere quanto della varianza può essere attribuito a vari fattori o errori residui. La formula chiave in questo contesto è:
 
-Varianza Totale = Varianza Spiegata + Varianza Residua
+$$ Varianza Totale = Varianza Spiegata + Varianza Residua $$
 
 Dove:
 
-Varianza Totale è la varianza complessiva dei dati, cioè quanto i dati variano in generale.
+- Varianza Totale è la varianza complessiva dei dati, cioè quanto i dati variano in generale.
 
-Varianza Spiegata rappresenta la varianza dovuta al modello o ai fattori esaminati (spiegati dalla variabile indipendente nel contesto della regressione).
+- Varianza Spiegata rappresenta la varianza dovuta al modello o ai fattori esaminati (spiegati dalla variabile indipendente nel contesto della regressione).
 
-Varianza Residua è la varianza non spiegata dal modello o dai fattori ed è associata all'errore residuo, ovvero la differenza tra i valori osservati e quelli previsti dal modello.
+- Varianza Residua è la varianza non spiegata dal modello o dai fattori ed è associata all'errore residuo, ovvero la differenza tra i valori osservati e quelli previsti dal modello.
 
 Nel contesto della regressione, puoi rappresentare la decomposizione della somma dei quadrati come segue:
 
-SST = SSR + SSE
+$$ SST = SSR + SSE $$
 
-SST (Sum of Squares Total) rappresenta la somma dei quadrati totale ed è la varianza dei dati osservati rispetto alla loro media.
+- SST (Sum of Squares Total) rappresenta la somma dei quadrati totale ed è la varianza dei dati osservati rispetto alla loro media.
 
-SSR (Sum of Squares Regression) rappresenta la varianza spiegata dal modello o dalla variabile indipendente.
+- SSR (Sum of Squares Regression) rappresenta la varianza spiegata dal modello o dalla variabile indipendente.
 
-SSE (Sum of Squares Error) rappresenta la varianza residua, ossia la varianza non spiegata dal modello.
+- SSE (Sum of Squares Error) rappresenta la varianza residua, ossia la varianza non spiegata dal modello.
 
 Per valutare l'efficienza del tuo modello di regressione, dovresti guardare la proporzione di questa varianza spiegata dal tuo modello (SSR). In generale, vuoi massimizzare la proporzione spiegata e minimizzare la proporzione non spiegata (SSE). Pertanto, punti a minimizzare SSE.
 
@@ -140,12 +122,13 @@ SSE <- sum(model$residuals^2)
 R_squared <- SSR / SST
 
 # Equivale a fare summary(model)
+R_squared
 ```
 
 
 ## Optimal Prediction
 
-L'argomento dell'"Optimal Prediction" (predizione ottimale) riguarda la determinazione di un modello predittivo che sia il migliore possibile in termini di accuratezza nel prevedere gli eventi futuri. Questo concetto è ampiamente utilizzato in diversi campi, come la statistica, l'apprendimento automatico, l'economia e molte altre discipline.
+L'argomento dell'"Optimal Prediction" (predizione ottimale) riguarda la determinazione di un modello predittivo che sia il migliore possibile in termini di accuratezza nel prevedere gli eventi futuri.
 
 L'obiettivo principale dell'optimal prediction è trovare il modello che massimizza la precisione delle previsioni, minimizzando l'errore di previsione. Ci sono vari metodi e tecniche per ottenere la predizione ottimale, a seconda del contesto e dei dati disponibili.
 
@@ -187,13 +170,13 @@ ggplot(data = test_data, aes(x = speed, y = dist)) +
 
 L'empirical covariance e la correlazione empirica sono misure statistiche utilizzate per quantificare la relazione tra due variabili in un insieme di dati osservati. Queste misure sono strettamente legate e sono spesso utilizzate per esaminare la relazione lineare tra due variabili.
 
-### Empirical Covariance (Covarianza Empirica):
+#### Empirical Covariance (Covarianza Empirica):
 La covarianza empirica è una misura della tendenza di due variabili a variare insieme. Indica se le due variabili crescono o diminuiscono simultaneamente (covarianza positiva) o se una aumenta mentre l'altra diminuisce (covarianza negativa).
 La formula per calcolare la covarianza empirica tra due variabili X e Y in un set di dati è data da:
 
 $$  Cov(X,Y) = \frac{1}{n-1} \sum_{i = 1}^n {(X_i - \overline{X})(Y_i - \overline{Y})} $$
 
-### Empirical Correlation (Correlazione Empirica):
+#### Empirical Correlation (Correlazione Empirica):
 La correlazione empirica è una versione standardizzata della covarianza empirica e misura la forza e la direzione di una relazione lineare tra due variabili. La correlazione empirica è sempre compresa tra -1 e 1.
 La formula per calcolare la correlazione empirica (il coefficiente di correlazione di Pearson) tra due variabili X e Y è data da:
 
@@ -201,8 +184,29 @@ $$  Cor(X,Y) = \frac{Cov(X,Y)}{S_X \cdot S_Y} $$
 
 Le misure di covarianza empirica e correlazione empirica sono utilizzate per esaminare la relazione tra variabili in un set di dati e sono particolarmente utili nell'analisi statistica e nell'apprendimento automatico per valutare le associazioni tra le variabili prima di costruire modelli predittivi. La correlazione empirica è più comunemente utilizzata perché fornisce una misura standardizzata della relazione tra variabili ed è meno influenzata dall'unità di misura.
 
-## Multiple Linear Regression
+Il coefficiente di Pearson è utile per vedere se due variabili hanno una correlazione lineare o meno. Questo perché non tutte le variabili correlate hanno una relazione lineare.
 
+Esempio:
+
+```{r}
+# Esempio dati casuali
+set.seed(123)
+x <- rnorm(100)  # Variabile x
+y <- 2 * x + rnorm(100)  # Variabile y (correlata a x)
+
+# Calcola la correlazione di Pearson
+correlation <- cor(x, y)
+
+# Stampa il valore di correlazione
+cat("Correlazione di Pearson tra x e y:", correlation, "\n")
+```
+
+
+In questo esempio, stiamo generando dati casuali per le variabili x e y. La variabile y è costruita come una trasformazione lineare di x con un termine di errore aggiunto. Poi, utilizziamo la funzione cor() per calcolare la correlazione di Pearson tra x e y.
+
+Il valore di correlazione verrà stampato a schermo. Un valore vicino a 1 indica una correlazione positiva forte, un valore vicino a -1 indica una correlazione negativa forte, mentre un valore vicino a 0 indica una scarsa correlazione tra le due variabili.
+
+## Multiple Linear Regression
 
 La "Multiple Linear Regression" (Regressione Lineare Multipla) è una tecnica di modellazione statistica utilizzata per analizzare la relazione tra una variabile dipendente (o target) e due o più variabili indipendenti (o predittive). Questa tecnica estende la semplice regressione lineare, che coinvolge solo una variabile indipendente, a un contesto in cui più variabili indipendenti sono coinvolte nel modello. La regressione lineare multipla è ampiamente utilizzata nell'analisi statistica e nell'apprendimento automatico per fare previsioni o comprendere le relazioni complesse tra variabili.
 
@@ -251,32 +255,32 @@ $$ Y = \beta_0 + \beta_1X_1 + ... + \beta_nX_n + \epsilon $$
 a : 
 $$ Y = \beta X + \epsilon   $$
 
-er stimare i coefficienti β del modello, si utilizzano metodi come il metodo dei minimi quadrati. L'obiettivo è trovare i valori di β che minimizzano la somma dei quadrati degli errori (ε).
+Per stimare i coefficienti β del modello, si utilizzano metodi come il metodo dei minimi quadrati. L'obiettivo è trovare i valori di β che minimizzano la somma dei quadrati degli errori (ε).
 
 a soluzione matriciale per stimare i coefficienti β é: $$ \beta = ((X^T X)^{-1} X^T Y) $$
 
 L'approccio matriciale semplifica la rappresentazione e la risoluzione dei modelli di regressione, specialmente quando si lavora con più variabili indipendenti. Inoltre, è utile per comprendere come eseguire calcoli di regressione in modo più efficiente utilizzando matrici e algebra lineare, specialmente in contesti di apprendimento automatico in cui le dimensioni dei dati possono essere elevate.
 
 ```{r}
-# Carica il dataset mtcars
-data(mtcars)
+# Carica il dataset "Housing"
+data(Housing)
 
 # Visualizza le prime righe del dataset
-head(mtcars)
+head(Housing)
 
 # Crea la matrice delle variabili indipendenti
-X <- as.matrix(mtcars[, c("wt", "hp", "qsec")])
+X <- as.matrix(Housing[, c("sqft", "bdrms", "age")])
 
 # Aggiungi una colonna di 1 per l'intercetta
 X <- cbind(1, X)
 
 # Crea il vettore delle variabili dipendenti
-Y <- mtcars$mpg
+Y <- Housing$price
 
 # Calcola i coefficienti del modello utilizzando l'approccio matriciale
 beta <- solve(t(X) %*% X) %*% t(X) %*% Y
 
-# Visualizza i coefficienti
+# Visualizza i coefficienti del modello
 cat("Coefficienti del modello:")
 print(beta)
 
@@ -288,10 +292,9 @@ model <- lm(Y ~ 0 + predictions)  # 0 indica di non calcolare l'intercetta
 summary(model)$r.squared  # Restituisce il valore di R-squared
 ```
 
-
-- Il peso del veicolo sembra essere il fattore più significativo nella determinazione del consumo di carburante. Aumenti del peso del veicolo sono associati a diminuzioni significative nel consumo di carburante.
-- La potenza del motore ha un effetto molto piccolo, con un aumento di potenza associato a un consumo di carburante leggermente più basso.
-- Il tempo di accelerazione ha un effetto positivo, con un tempo di accelerazione più lungo associato a un consumo di carburante più alto.
+- Il peso del veicolo sembra essere il fattore più significativo nella determinazione del consumo di carburante
+- La potenza del motore ha un effetto molto piccolo, con un aumento di potenza associato a un consumo di carburante leggermente più basso
+- Il tempo di accelerazione ha un effetto positivo, con un tempo di accelerazione più lungo associato a un consumo di carburante più alto
 
 
 ## Geometrical Interpretation
