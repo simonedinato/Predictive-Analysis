@@ -262,20 +262,20 @@ a soluzione matriciale per stimare i coefficienti β é: $$ \beta = ((X^T X)^{-1
 L'approccio matriciale semplifica la rappresentazione e la risoluzione dei modelli di regressione, specialmente quando si lavora con più variabili indipendenti. Inoltre, è utile per comprendere come eseguire calcoli di regressione in modo più efficiente utilizzando matrici e algebra lineare, specialmente in contesti di apprendimento automatico in cui le dimensioni dei dati possono essere elevate.
 
 ```{r}
-# Carica il dataset "Housing"
-data(Housing)
+# Carica il dataset "swiss" (un dataset di dati demografici svizzeri)
+data(swiss)
 
 # Visualizza le prime righe del dataset
-head(Housing)
+head(swiss)
 
 # Crea la matrice delle variabili indipendenti
-X <- as.matrix(Housing[, c("sqft", "bdrms", "age")])
+X <- as.matrix(swiss[, c("Examination", "Education")])
 
 # Aggiungi una colonna di 1 per l'intercetta
 X <- cbind(1, X)
 
 # Crea il vettore delle variabili dipendenti
-Y <- Housing$price
+Y <- swiss$Fertility
 
 # Calcola i coefficienti del modello utilizzando l'approccio matriciale
 beta <- solve(t(X) %*% X) %*% t(X) %*% Y
@@ -289,12 +289,12 @@ predictions <- X %*% beta
 
 # Valuta le prestazioni del modello
 model <- lm(Y ~ 0 + predictions)  # 0 indica di non calcolare l'intercetta
-summary(model)$r.squared  # Restituisce il valore di R-squared
+summary(model)$r.squared  
+# Restituisce il valore di R-squared
 ```
 
-- Il peso del veicolo sembra essere il fattore più significativo nella determinazione del consumo di carburante
-- La potenza del motore ha un effetto molto piccolo, con un aumento di potenza associato a un consumo di carburante leggermente più basso
-- Il tempo di accelerazione ha un effetto positivo, con un tempo di accelerazione più lungo associato a un consumo di carburante più alto
+- Esame (Examination): Un aumento nei punteggi di esame è associato a una diminuzione della fertilità nelle regioni svizzere. Questo suggerisce che un migliore stato di salute generale, misurato tramite l'esame, è correlato a una fertilità più bassa.
+- Educazione (Education): Un aumento nel livello di educazione è correlato a una riduzione della fertilità. Le regioni con un livello di istruzione più elevato tendono ad avere una fertilità più bassa.
 
 
 ## Geometrical Interpretation
@@ -377,6 +377,8 @@ cat("Valore p:", p_value, "\n")
 
 In questo esempio, eseguiamo un'ANOVA a un fattore per valutare le differenze nei punteggi tra i gruppi A, B e C. Il rapporto F e il valore p ci permettono di determinare se le differenze tra i gruppi sono statisticamente significative.
 
+I risultati dell'ANOVA suggeriscono che non ci sono differenze statisticamente significative tra i gruppi. La varianza tra i gruppi è molto piccola rispetto alla varianza all'interno dei gruppi, e il test F non è significativo. Questo può indicare che i gruppi sono simili tra loro per quanto riguarda la variabile in studio.
+
 
 Esempio 2:
 
@@ -398,13 +400,21 @@ summary(anova_result)
 
 In questo esempio, eseguiamo un'ANOVA a due fattori per esaminare le differenze nei punteggi in base al genere e al trattamento. La tabella ANOVA ci mostra se ci sono interazioni significative tra questi due fattori.
 
+Dalla tabella dell'ANOVA fornita, possiamo trarre le seguenti conclusioni:
+
+- Il fattore "Trattamento" ha un forte effetto sulla variabile dipendente, con un valore di F elevato e un p-value molto basso, indicando che le differenze tra i trattamenti sono statisticamente significative (***).
+- Il fattore "Genere" non ha un effetto significativo sulla variabile dipendente, con un valore di F basso e un p-value elevato (0.546).
+- L'interazione tra "Genere" e "Trattamento" non ha un effetto significativo sulla variabile dipendente, con un valore di F e un p-value non significativi (0.121 e 0.729, rispettivamente).
+
+In sintesi, i risultati dell'ANOVA suggeriscono che il "Trattamento" è il principale driver delle differenze osservate nella variabile dipendente, mentre il "Genere" e l'interazione tra "Genere" e "Trattamento" non sembrano avere un effetto significativo.
+
 - Un valore F maggiore di 1 suggerisce che i parametri o i fattori sono significativi, poiché la varianza spiegata è maggiore della varianza non spiegata.
 - Un valore F vicino a 1 indica che il modello non spiega in modo significativo la variabilità nei dati.
 - Il valore p associato all'F-value fornisce la probabilità che i risultati osservati siano dovuti al caso. Un valore p basso (di solito inferiore a 0.05) indica una significatività elevata, mentre un valore p alto suggerisce una mancanza di significatività.
 
 La valutazione della significatività dipende da entrambi i valori F e p, e il livello di significatività scelto è basato sulla specifica analisi e sulle convenzioni del campo di studio.
 
-### Ipotesi
+#### Ipotesi
 
 Nell'analisi statistica in cui si calcola un valore F, ci sono due ipotesi principali: l'ipotesi nulla (H0) e l'ipotesi alternativa (H1).
 
@@ -416,30 +426,18 @@ L'ipotesi alternativa è il contrario dell'ipotesi nulla. Sostiene che ci sono d
 
 Quindi, quando si calcola un valore F e si esegue un test statistico, l'ipotesi nulla (H0) è che non ci siano differenze significative, mentre l'ipotesi alternativa (H1 o HA) è che ci siano differenze significative. L'obiettivo del test F è determinare se i dati forniscono prove sufficienti per respingere l'ipotesi nulla a favore dell'ipotesi alternativa, indicando che ci sono differenze significative tra i gruppi o i fattori considerati.
 
+Continuiamo l'esempio di prima:
+
 ```{r}
-# Creiamo tre campioni di dati (simulati)
-set.seed(123)
-gruppo_A <- rnorm(30, mean = 50, sd = 5)
-gruppo_B <- rnorm(30, mean = 55, sd = 5)
-gruppo_C <- rnorm(30, mean = 60, sd = 5)
-
-# Creiamo un dataframe con i dati
-data <- data.frame(
-  Gruppo = rep(c("A", "B", "C"), each = 30),
-  Valore = c(gruppo_A, gruppo_B, gruppo_C)
-)
-
-# Eseguiamo un'ANOVA
-anova_result <- aov(Valore ~ Gruppo, data = data)
-
 # Visualizziamo la tabella ANOVA
-summary(anova_result)
+anova_summary <- summary(anova_result)
+print(anova_summary)
 
 # Estraiamo il valore F
-f_statistic <- summary(anova_result)[[1]][["F value"]][1]
+f_statistic <- anova_summary[[1]][["F value"]][3]  # Usiamo [3] per estrarre il valore relativo all'interazione
 
 # Estraiamo il valore p
-p_value <- summary(anova_result)[[1]][["Pr(>F)"]][1]
+p_value <- anova_summary[[1]][["Pr(>F)"]][3]  # Usiamo [3] per estrarre il valore relativo all'interazione
 
 cat("Valore F:", f_statistic, "\n")
 cat("Valore p:", p_value, "\n")
@@ -465,18 +463,18 @@ Ecco un esempio per chiarire il concetto di modelli nidificati:
 
 Esempio di Modelli di Regressione Nidificati:
 
-Supponiamo di voler creare un modello di regressione per prevedere il reddito di una persona basandoci su tre variabili indipendenti: età, istruzione e esperienza lavorativa. Il modello completo potrebbe essere:
+Supponiamo di voler creare un modello di regressione per prevedere il reddito di una persona basandoci su tre variabili indipendenti: età, istruzione, esperienza lavorativa e genere. Il modello completo potrebbe essere:
 
 1 - Modello Completo
 
-$$ Reddito = \beta_0 + \beta_1 \cdot Età + \beta_2 \cdot Istruzione + \beta_3 \cdot Esperienza $$
-Tuttavia, potremmo essere interessati a valutare se l'aggiunta della variabile "genere" migliora significativamente la capacità predittiva del modello. In tal caso, il modello con "genere" è nidificato all'interno del modello completo:
+$$ Reddito = \beta_0 + \beta_1 \cdot Età + \beta_2 \cdot Istruzione + \beta_3 \cdot Esperienza + \beta_4 \cdot Genere $$
+Tuttavia, potremmo essere interessati a valutare se l’aggiunta della variabile “genere” migliora significativamente la capacità predittiva del modello. In tal caso, il modello senza “genere” è nidificato all’interno del modello completo:
 
 2 - Modello Nidificato
 
-$$ Reddito = \beta_0 + \beta_1 \cdot Età + \beta_2 \cdot Istruzione + \beta_3 \cdot Esperienza + \beta_4 \cdot Genere $$
+$$ Reddito = \beta_0 + \beta_1 \cdot Età + \beta_2 \cdot Istruzione + \beta_3 \cdot Esperienza $$
 
-In questo esempio, il Modello 1 è il modello completo e il Modello 2 è il modello nidificato con un parametro aggiuntivo per "genere". Per confrontare questi modelli, si può utilizzare il test F per determinare se l'aggiunta di "genere" contribuisce in modo significativo alla spiegazione della variazione nei redditi. Se il test F mostra che il modello completo è significativamente migliore del modello nidificato, possiamo concludere che "genere" è un predittore significativo.
+In questo esempio, il Modello 1 è il modello completo e il Modello 2 è il modello nidificato senza il parametro per "genere". Per confrontare questi modelli, si può utilizzare il test F per determinare se l’aggiunta di “genere” contribuisce in modo significativo alla spiegazione della variazione nei redditi. Se il test F mostra che il modello completo è significativamente migliore del modello nidificato, possiamo concludere che "genere" è un predittore significativo.
 
 In sintesi, i modelli nidificati sono utilizzati per valutare l'aggiunta o la rimozione di variabili o parametri nei modelli statistici al fine di determinare se tali modifiche migliorano significativamente la bontà di adattamento o la capacità predittiva del modello.
 
@@ -511,10 +509,11 @@ alpha <- 0.05
 
 # Valutiamo se rifiutare l'ipotesi nulla
 if (anova_result[2, "Pr(>F)"] < alpha) {
-  cat("Rifiutiamo l'ipotesi nulla. L'aggiunta di 'genere' migliora significativamente il modello.\n")
+  cat("La rimozione di 'genere' non migliora significativamente il modello.\n")
 } else {
-  cat("Non rifiutiamo l'ipotesi nulla. L'aggiunta di 'genere' non migliora significativamente il modello.\n")
+  cat("La rimozione di 'genere' migliora significativamente il modello.\n")
 }
+
 ```
 
 ## Variable Selection in R
@@ -527,7 +526,7 @@ AIC (Akaike's Information Criterion):
 
 Il Criterio d'Informazione di Akaike (AIC) è una metrica che misura la qualità di un modello statistico. L'obiettivo dell'AIC è trovare il miglior compromesso tra la bontà di adattamento del modello ai dati e la sua complessità. L'AIC tiene conto della funzione di verosimiglianza del modello e penalizza i modelli con un numero maggiore di parametri. L'AIC è definito come:
 
-$$ AIC = -2 \cdot log-likelihood + 2 \cdot k $$
+$$ AIC = -2logLikelihood + 2k $$
 
 Dove:
 
