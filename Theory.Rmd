@@ -14,7 +14,6 @@ editor_options:
 Questo documento fornisce un'ampia panoramica sul corso di Analisi Predittiva di Ca' Foscari (CT0429) dell'anno 2023/2024.
 Nel corso del documento, esploreremo vari argomenti riguardanti l'Analisi Predittiva, compresi Anova, Residui, Formule, Correlazione tra variabili, Predict, l'utilizzo di più modelli, e come selezionare le variabili all'interno di un modello.
 
-
 L'obiettivo di questo documento è guidarti attraverso i concetti chiave e le pratiche nell'Analisi Predittiva, con un focus sull'utilizzo del linguaggio di programmazione R per applicare queste tecniche.
 Spero che questo documento ti aiuti a comprendere meglio questa materia di studio al fine di superare l'esame.
 
