@@ -812,13 +812,24 @@ Tuttavia, è importante scegliere con saggezza le trasformazioni per evitare il 
 
 La multicollinearità si verifica quando due o più variabili indipendenti in un modello di regressione sono fortemente correlate tra loro.
 Questa correlazione tra le variabili indipendenti può rendere difficile l'interpretazione del modello e portare a stime poco affidabili dei coefficienti di regressione.
-La presenza di multicollinearità può causare un aumento dei variabili inflation factor (VIF) è una misura comune utilizzata per valutare la multicollinearità tra le variabili indipendenti in un modello di regressione.
+La presenza di multicollinearità può causare un aumento dei variabili inflation factor (VIF), una misura comune utilizzata per valutare la multicollinearità tra le variabili indipendenti in un modello di regressione.
 Un alto VIF per una variabile indica che quella variabile è fortemente correlata con le altre variabili indipendenti nel modello.
 
 Variance Inflation Factor (VIF): Il VIF è una misura utilizzata per quantificare la multicollinearità tra le variabili indipendenti in un modello di regressione.
 Un alto VIF indica che una variabile è altamente correlata con altre variabili indipendenti, il che può rendere difficile l'interpretazione del modello e portare a stime poco affidabili dei coefficienti di regressione.
 Il VIF di ciascuna variabile indipendente è calcolato come il rapporto della varianza dell'errore standard del coefficiente di regressione stimato per quella variabile rispetto alla varianza dell'errore standard se la variabile fosse stata completamente non correlata alle altre variabili indipendenti.
 In generale, un VIF superiore a 5 o 10 è spesso considerato un segno di multicollinearità significativa.
+
+$$ 
+VIF_i = (X^TX)_{i+1,i+1}^{-1}*ns^2_{X_i}
+$$
+$$
+Or
+$$
+
+$$
+VIF_i = \frac{1}{1-R^2_i}
+$$
 
 ```{r}
 # Load the necessary library
