@@ -911,3 +911,55 @@ influential_points_cook <- which(cook_distance > 4 / length(cook_distance))
 # Visualizziamo gli indici dei punti influenti basati su Cook's Distance
 cat("Punti influenti basati su Cook's Distance:", influential_points_cook, "\n")
 ```
+
+### Leverage
+
+Il "leverage" è una misura utilizzata nell'analisi dei dati statistici per identificare punti influenti o osservazioni atipiche in un modello di regressione. Questa misura valuta quanto un'osservazione può influenzare i risultati del modello, in particolare i coefficienti di regressione. Il leverage è calcolato sulla base delle variabili predittive e può essere utilizzato per identificare le osservazioni che hanno un impatto significativo sul modello.
+
+Calcolo del leverage: In R, puoi calcolare il leverage utilizzando la funzione hatvalues() dopo aver adattato il tuo modello di regressione. Il risultato sarà un vettore di valori di leverage, uno per ciascuna osservazione nel tuo dataset.
+Identificazione dei punti influenti: I punti con un valore di leverage significativamente più alto degli altri sono quelli che possono influenzare notevolmente il modello. Puoi stabilire una soglia arbitraria o utilizzare metodi statistici per determinare quali punti sono influenti. Ad esempio, i punti con leverage superiore a 2 volte la media possono essere considerati influenti.
+Esame dei punti influenti: Una volta identificati i punti influenti, è possibile esaminarli ulteriormente per determinare se sono effettivamente outliers o errori di misurazione. Potresti voler esaminare le osservazioni con elevate differenze tra i valori osservati e quelli previsti dal modello.
+Rimozione dei punti influenti: Se i punti influenti risultano essere effettivamente outlier o dati errati, puoi considerare l'opzione di rimuoverli dal tuo dataset. Questa operazione può migliorare la bontà del modello eliminando dati che potrebbero distorcerne i risultati.
+
+È importante notare che la rimozione dei punti influenti dovrebbe essere effettuata con cautela e solo se c'è una giustificazione valida. In alcuni casi, potresti scegliere di mantenere i punti influenti nel modello se ritieni che rappresentino informazioni significative o se hanno una spiegazione plausibile.
+
+
+
+```{r}
+# Generiamo dati casuali
+set.seed(123)
+n <- 100
+x <- rnorm(n)
+y <- 2 * x + rnorm(n)
+
+# Adattiamo un modello di regressione lineare
+model <- lm(y ~ x)
+
+# Calcoliamo i valori di leverage
+leverage <- hatvalues(model)
+
+# Identifichiamo i punti influenti
+infl_points <- which(leverage > 2 * mean(leverage))
+
+# Visualizziamo i punti influenti
+print(infl_points)
+
+par(mfrow = c(1,2))
+# Plot del grafico
+plot(x, y)
+points(x[infl_points], y[infl_points], col = "blue", pch = 19)
+
+# Plot del Leverage
+plot(x, leverage)
+points(x[infl_points], leverage[infl_points], col = "blue", pch = 19)
+```
+
+Nota che nell'esempio abbiamo utilizzato una soglia di leverage arbitraria (2 volte la media) per identificare i punti influenti. In un'applicazione pratica, è consigliabile considerare la soglia in base al contesto del problema e all'analisi dei dati.
+
+
+
+
+
+
+
+
