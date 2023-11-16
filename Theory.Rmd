@@ -1,9 +1,9 @@
 ---
 title: "Riassunto Analisi Predittiva"
 output: html_notebook
-author: Simone Dinato
+author: "Simone Dinato"
 date: "Data di Creazione: 2023-10-20"
-version: "Versione: 0.6"
+version: "Versione: 0.8"
 editor_options: 
   markdown: 
     wrap: sentence
@@ -39,6 +39,7 @@ Spero che questo documento ti aiuti a comprendere meglio questa materia di studi
 -   [Multicollinearity]
 -   [Influential points]
     -   [Leverage]
+-   [Generalized Linear Models]
 
 ## Analisi dei residui
 
@@ -56,10 +57,10 @@ y <- 2 * x + rnorm(100)
 model <- lm(y ~ x)
 
 # Effettuiamo l'analisi dei residui
-residuals <- residuals(model)
+Residuals <- residuals(model)
 
 # Creiamo un grafico dei residui
-plot(residuals, main = "Distribuzione Normale dei Residui", xlab = "Residui")
+plot(x, Residuals, main = "Distribuzione Normale dei Residui",xlab = "X", ylab = "Residui")
 abline(h = 0, col = "red")
 ```
 
@@ -83,8 +84,8 @@ model <- lm(y ~ x)
 # Effettuiamo l'analisi dei residui
 residuals <- residuals(model)
 
-# Creiamo un grafico di dispersione dei residui rispetto ai valori previsti
-plot(predict(model), residuals, main = "Distribuzione a U dei Residui", xlab = "Valori Previsti", ylab = "Residui")
+# Creiamo un grafico dei residui
+plot(x, residuals, main = "Distribuzione a U dei Residui", xlab = "X", ylab = "Residui")
 abline(h = 0, col = "red")
 ```
 
@@ -106,7 +107,7 @@ model <- lm(y ~ x)
 residuals <- residuals(model)
 
 # Creiamo un grafico dei residui
-plot(residuals, main = "Presenza di Outlier nei Residui", xlab = "Residui")
+plot(x, residuals, main = "Presenza di Outlier nei Residui", ylab = "Residui", xlab = "X")
 abline(h = 0, col = "red")
 ```
 
@@ -525,7 +526,7 @@ Ecco un esempio per chiarire il concetto di modelli nidificati:
 
 Esempio di Modelli di Regressione Nidificati:
 
-Supponiamo di voler creare un modello di regressione per prevedere il reddito di una persona basandoci su tre variabili indipendenti: età, istruzione, esperienza lavorativa e genere.
+Supponiamo di voler creare un modello di regressione per prevedere il reddito di una persona basandoci su quattro variabili indipendenti: età, istruzione, esperienza lavorativa e genere.
 Il modello completo potrebbe essere:
 
 1 - Modello Completo
@@ -756,6 +757,8 @@ Dove y sono i dati originali e λ è il parametro di trasformazione.
 È possibile calcolare il valore ottimale di λ che massimizza la normalità dei dati.
 
 ```{r}
+
+library(ggplot2)
 # Genera dati casuali
 set.seed(123)
 data <- data.frame(y = rgamma(100, shape = 2, scale = 1))
@@ -767,7 +770,22 @@ lambda <- result$x[which.max(result$y)]
 transformed_data <- if (lambda == 0) log(data$y) else ((data$y^lambda - 1) / lambda)
 
 # Visualizza il valore ottimale di lambda
-cat("Valore ottimale di lambda:", lambda, "\n")
+cat("Valore ottimale di lambda: ", lambda, "\n")
+
+# Crea un dataframe con i dati originali e trasformati
+plot_data <- data.frame(Original = data$y, Transformed = transformed_data)
+
+par(mfrow = c(1,2))
+# Plotta i dati originali
+ggplot(plot_data, aes(x = Original)) +
+  geom_histogram(binwidth = 0.5, fill = "blue", alpha = 0.7) +
+  labs(title = "Distribuzione dei dati originali")
+
+# Plotta i dati trasformati
+ggplot(plot_data, aes(x = Transformed)) +
+  geom_histogram(binwidth = 0.1, fill = "green", alpha = 0.7) +
+  labs(title = "Distribuzione dei dati trasformati")
+
 ```
 
 -   Polynomials (Polinomi): Le trasformazioni polinomiali consentono di modellare relazioni non lineari tra variabili. È possibile aggiungere termini polinomiali al modello di regressione per catturare curve o relazioni più complesse. Ad esempio, si possono utilizzare polinomi di secondo grado per modellare una relazione quadratica tra una variabile indipendente e la variabile dipendente. L'aggiunta di termini polinomiali può migliorare l'adattamento del modello ai dati, ma è importante evitare di aggiungere troppi termini polinomiali per evitare il sovradattamento.
@@ -823,9 +841,9 @@ In generale, un VIF superiore a 5 o 10 è spesso considerato un segno di multico
 
 $$ 
 VIF_i = (X^TX)_{i+1,i+1}^{-1}*ns^2_{X_i}
-$$ $$
-Or
 $$
+
+Or
 
 $$
 VIF_i = \frac{1}{1-R^2_i}
@@ -869,8 +887,8 @@ I punti influenti si riferiscono a osservazioni nei dati che hanno un impatto si
 Questi punti possono influenzare la stima dei parametri del modello, i residui, i valori p, l'R-squared e altre statistiche di rilevanza.
 Ci sono diverse metriche utilizzate per identificare i punti influenti, tra cui Standardized Residuals, Studentized Residuals e Cook's Distance.
 
--   Standardized Residuals (Residui Standardizzati): Questi sono i residui divisi per la deviazione standard dei residui. Un residuo standardizzato è una misura di quanto un punto dati si discosti dalla linea di regressione in termini di deviazioni standard. I punti con residui standardizzati molto grandi (positivi o negativi) sono considerati influenti.
--   Studentized Residuals (Residui Studentizzati): Questi sono i residui divisi per una stima della deviazione standard dell'errore residuo. I residui studentizzati sono utilizzati per valutare quanto un punto dati sia influente, considerando l'effetto delle altre osservazioni nel dataset. I punti con residui studentizzati significativamente grandi in valore assoluto sono considerati influenti.
+-   Standardized Residuals (Residui Standardizzati): Questi sono i residui divisi per la deviazione standard dei residui. Un residuo standardizzato è una misura di quanto un punto dato si discosti dalla linea di regressione in termini di deviazioni standard. I punti con residui standardizzati molto grandi (positivi o negativi) sono considerati influenti.
+-   Studentized Residuals (Residui Studentizzati): Questi sono i residui divisi per una stima della deviazione standard dell'errore residuo. I residui studentizzati sono utilizzati per valutare quanto un punto dato sia influente considerando l'effetto delle altre osservazioni nel dataset. I punti con residui studentizzati significativamente grandi in valore assoluto sono considerati influenti.
 -   Cook's Distance (Distanza di Cook): Cook's Distance è una metrica che combina l'effetto di un punto sui parametri del modello e il suo effetto sui residui. I punti con Cook's Distance molto grandi sono considerati influenti. Cook's Distance è spesso utilizzato per identificare punti che, se rimossi, avrebbero un impatto significativo sui risultati del modello.
 
 Nel contesto della regressione, i punti influenti possono derivare da outlier nei dati, dati errati o punti che influenzano notevolmente la stima dei parametri.
@@ -914,17 +932,20 @@ cat("Punti influenti basati su Cook's Distance:", influential_points_cook, "\n")
 
 ### Leverage
 
-Il "leverage" è una misura utilizzata nell'analisi dei dati statistici per identificare punti influenti o osservazioni atipiche in un modello di regressione.
+Il "Leverage" è una misura utilizzata nell'analisi dei dati statistici per identificare punti influenti o osservazioni atipiche in un modello di regressione.
 Questa misura valuta quanto un'osservazione può influenzare i risultati del modello, in particolare i coefficienti di regressione.
 Il leverage è calcolato sulla base delle variabili predittive e può essere utilizzato per identificare le osservazioni che hanno un impatto significativo sul modello.
 
 Calcolo del leverage: In R, puoi calcolare il leverage utilizzando la funzione hatvalues() dopo aver adattato il tuo modello di regressione.
 Il risultato sarà un vettore di valori di leverage, uno per ciascuna osservazione nel tuo dataset.
+
 Identificazione dei punti influenti: I punti con un valore di leverage significativamente più alto degli altri sono quelli che possono influenzare notevolmente il modello.
 Puoi stabilire una soglia arbitraria o utilizzare metodi statistici per determinare quali punti sono influenti.
 Ad esempio, i punti con leverage superiore a 2 volte la media possono essere considerati influenti.
+
 Esame dei punti influenti: Una volta identificati i punti influenti, è possibile esaminarli ulteriormente per determinare se sono effettivamente outliers o errori di misurazione.
 Potresti voler esaminare le osservazioni con elevate differenze tra i valori osservati e quelli previsti dal modello.
+
 Rimozione dei punti influenti: Se i punti influenti risultano essere effettivamente outlier o dati errati, puoi considerare l'opzione di rimuoverli dal tuo dataset.
 Questa operazione può migliorare la bontà del modello eliminando dati che potrebbero distorcerne i risultati.
 
@@ -962,3 +983,68 @@ points(x[infl_points], leverage[infl_points], col = "blue", pch = 19)
 
 Nota che nell'esempio abbiamo utilizzato una soglia di leverage arbitraria (2 volte la media) per identificare i punti influenti.
 In un'applicazione pratica, è consigliabile considerare la soglia in base al contesto del problema e all'analisi dei dati.
+
+## Generalized Linear Models
+
+ChatGPT I Modelli Lineari Generalizzati (GLM) forniscono un quadro flessibile per estendere la regressione lineare classica a una vasta gamma di tipi di dati.
+Nei GLM, manteniamo un predittore lineare, indicato come η, che è una combinazione dei predittori X e dei coefficienti β.
+L'innovazione cruciale risiede nell'uso di una funzione di collegamento g(⋅), che connette il predittore lineare alla media della variabile di risposta.
+
+$$
+η = X\beta
+$$
+
+Per problemi di classificazione binaria, come la regressione logistica, è comunemente utilizzata la funzione di collegamento logit.
+Questa funzione trasforma il predittore lineare nei logaritmi delle probabilità di successo.
+Per più di due categorie, è possibile utilizzare la regressione logistica multinomiale o ordinale, ciascuna con la sua opportuna funzione di collegamento.
+
+La funzione di probabilità è espressa in questo modo: $$
+p = \frac{η}{1-η}
+$$ Se il rapoorto è 1, allora i due eventi hanno la stessa probabilità.
+Un risultato maggiore di uno indica una probabilità positiva (η), un rapoorto minore di 1 indica una probabilità negativa (1 - η).
+
+La funzione logit ci permette di avere risultati nell'intervallo [-♾️, +♾️]
+
+$$
+logit(η) = log( \frac{η}{1-η} )
+$$
+
+I GLM possono gestire varie distribuzioni di probabilità dalla famiglia esponenziale, consentendo una flessibilità nel trattare diversi tipi di dati.
+Ad esempio, la distribuzione gaussiana è utilizzata per risposte continue, quella binomiale per risultati binari e quella di Poisson per dati di conteggio.
+
+L'essenza dei GLM sta nella loro capacità di gestire scenari in cui vengono violate le assunzioni della regressione lineare classica, come la presenza di residui distribuiti normalmente.
+Scegliendo una funzione di collegamento e una distribuzione appropriate, i GLM affrontano problemi come la varianza non costante, distribuzioni asimmetriche o relazioni non lineari.
+
+La funzione inversa del logit, comunemente nota come la funzione logistica (o sigmoide), converte il predittore lineare (η) nella probabilità di successo (p).
+La sua espressione è la seguente:
+
+$$
+logit^{-1}(η) = p = \frac{e^η}{1 + e^{-η}} 
+$$ 
+
+Questa funzione logistica trasforma l'intervallo infinito del predittore lineare in un intervallo compreso tra 0 e 1, rendendola adatta per modellare probabilità.
+
+Nei modelli logistici, il predittore lineare (η) è espresso come una combinazione lineare dei predittori e dei relativi coefficienti.
+La funzione logistica trasforma quindi questo predittore lineare in probabilità, che può essere interpretata come la probabilità di appartenenza a una classe specifica nel caso di problemi di classificazione binaria.
+
+Quindi avremo che la probabilità equivale a:
+
+$$
+odd = \frac{p(x_1,...,x_{p-1})}{1 - p(x_1,...,x_{p-1})} = \frac{P[Y = 1| X_1 = x_1, ... X_{p-1} = x_{p-1}]}{P[Y = 0| X_1 = x_1, ... X_{p-1} = x_{p-1}]}
+$$
+
+ed il suo logaritmo equivale alla combinazione linare dei predittori:
+
+$$
+log(\frac{p(x_1,...,x_{p-1})}{1 - p(x_1,...,x_{p-1})}) = \beta_0 + \beta_1X_1+ ... + \beta_{p-1}X_{p-1}
+$$
+
+che vengono mappati tra 0 e 1 con:
+
+$$
+p(x_1,...,x_{p-1}) = \frac{e^{\beta_0 + \beta_1X_1+ ... + \beta_{p-1}X_{p-1}}}{1 + e^{\beta_0 + \beta_1X_1+ ... + \beta_{p-1}X_{p-1}}}
+$$
+
+
+
+
