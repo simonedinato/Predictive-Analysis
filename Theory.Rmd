@@ -40,6 +40,8 @@ Spero che questo documento ti aiuti a comprendere meglio questa materia di studi
 -   [Influential points]
     -   [Leverage]
 -   [Generalized Linear Models]
+    -   [Bernoulli e Poisson]
+    -   [Stima dei parametri]
 
 ## Analisi dei residui
 
@@ -986,7 +988,7 @@ In un'applicazione pratica, è consigliabile considerare la soglia in base al co
 
 ## Generalized Linear Models
 
-ChatGPT I Modelli Lineari Generalizzati (GLM) forniscono un quadro flessibile per estendere la regressione lineare classica a una vasta gamma di tipi di dati.
+I Modelli Lineari Generalizzati (GLM) forniscono un quadro flessibile per estendere la regressione lineare classica a una vasta gamma di tipi di dati.
 Nei GLM, manteniamo un predittore lineare, indicato come η, che è una combinazione dei predittori X e dei coefficienti β.
 L'innovazione cruciale risiede nell'uso di una funzione di collegamento g(⋅), che connette il predittore lineare alla media della variabile di risposta.
 
@@ -1001,9 +1003,9 @@ Per più di due categorie, è possibile utilizzare la regressione logistica mult
 La funzione di probabilità è espressa in questo modo: $$
 p = \frac{η}{1-η}
 $$ Se il rapoorto è 1, allora i due eventi hanno la stessa probabilità.
-Un risultato maggiore di uno indica una probabilità positiva (η), un rapoorto minore di 1 indica una probabilità negativa (1 - η).
+Un risultato maggiore di uno indica una probabilità positiva (η), un rapporto minore di 1 indica una probabilità negativa (1 - η).
 
-La funzione logit ci permette di avere risultati nell'intervallo [-♾️, +♾️]
+La funzione logit ci permette di avere risultati nell'intervallo [$-\infty$, $+\infty$]
 
 $$
 logit(η) = log( \frac{η}{1-η} )
@@ -1020,7 +1022,7 @@ La sua espressione è la seguente:
 
 $$
 logit^{-1}(η) = p = \frac{e^η}{1 + e^{-η}} 
-$$ 
+$$
 
 Questa funzione logistica trasforma l'intervallo infinito del predittore lineare in un intervallo compreso tra 0 e 1, rendendola adatta per modellare probabilità.
 
@@ -1045,6 +1047,77 @@ $$
 p(x_1,...,x_{p-1}) = \frac{e^{\beta_0 + \beta_1X_1+ ... + \beta_{p-1}X_{p-1}}}{1 + e^{\beta_0 + \beta_1X_1+ ... + \beta_{p-1}X_{p-1}}}
 $$
 
+### Bernoulli e Poisson
 
+I GLM estendono i modelli lineari tradizionali per adattarsi a una vasta gamma di distribuzioni e strutture di dati.
+Questi modelli sono utili quando la distribuzione dei dati o la relazione tra la risposta e i predittori non segue una distribuzione normale.
 
+Le funzioni di densità di probabilità sono funzioni matematiche che descrivono la probabilità di ottenere un particolare risultato in una variabile casuale.
+Sono utilizzate per modellare la distribuzione di probabilità di una variabile casuale e forniscono informazioni sulla likelihood (verosimiglianza) di osservare specifici valori.
 
+La funzione densità per le famiglie parametriche nel contesto dei modelli lineari generalizzati (GLM) può essere rappresentata come:
+
+$$ f(y; \theta, \phi) = \exp\left\{\frac{y\theta - b(\theta)}{a(\phi)} + c(y, \phi)\right\} $$
+
+Dove: 
+
+- $y$ rappresenta la variabile di risposta.
+- $\theta$ è il parametro canonico associato alla funzione di collegamento.
+- $\phi$ è il parametro di dispersione.
+- $a(\phi)$, $b(\theta)$, e $c(y, \phi)$ sono funzioni specifiche della famiglia di distribuzione scelta.
+
+Questa formula è una forma generale che può essere utilizzata per rappresentare la funzione di densità di molte distribuzioni incluse nelle famiglie parametriche dei GLM.
+Le funzioni $a(\phi)$, $b(\theta)$, e $c(y, \phi)$ variano in base alla distribuzione specifica.
+
+**Normale**: 
+
+  Funzione di densità: $f(x; \mu, \sigma) = \frac{1}{\sqrt{2\pi}\sigma} \exp\left(-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2\right)$
+    
+  Funzione di collegamento: $g(ξ) = ξ$
+
+**Poisson:**
+
+  Funzione di densità: $f(y; \lambda) = \frac{e^{-\lambda} \lambda^y}{y!}$
+
+  Funzione di collegamento: $g(ξ) = log(ξ)$
+
+**Bernoulli:**
+
+  Funzione di densità: $f(y; p) = p^y (1-p)^{1-y}$
+
+  Funzione di collegamento: $g(ξ) = log(\frac{ξ}{1-ξ})$
+
+**Gamma:**
+
+  Funzione di densità: $f(x; k, \theta) = \frac{1}{\Gamma(k) \theta^k} x^{k-1} e^{-\frac{x}{\theta}}$
+
+  Funzione di collegamento: $g(ξ) = -\frac{1}{ξ}$
+
+Dove la funzione di collegamento serve a stabilire una relazione tra il valore medio della variabile di risposta e la combinazione lineare dei predittori.
+
+### Stima dei parametri
+
+```{r}
+# Creiamo un set di dati fittizio
+set.seed(123)
+dati <- data.frame(
+  ore_di_studio = rnorm(100, mean = 20, sd = 5),
+  successo = sample(c(0, 1), 100, replace = TRUE)
+)
+
+# Adattiamo il modello di regressione logistica
+modello_logistico <- glm(successo ~ ore_di_studio, data = dati, family = binomial)
+
+# Visualizziamo un riepilogo del modello
+summary(modello_logistico)
+
+# Creiamo nuovi dati per fare previsioni
+nuovi_dati <- data.frame(ore_di_studio = seq(10, 30, length.out = 100))
+
+# Effettuiamo previsioni
+previsioni <- predict(modello_logistico, newdata = nuovi_dati, type = "response")
+
+# Visualizziamo i risultati
+plot(dati$ore_di_studio, dati$successo, pch = 16, col = "blue", xlab = "Ore di Studio", ylab = "Probabilità di Successo")
+lines(nuovi_dati$ore_di_studio, previsioni, col = "red", lw = 2)
+```
