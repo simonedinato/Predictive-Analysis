@@ -39,9 +39,9 @@ Spero che questo documento ti aiuti a comprendere meglio questa materia di studi
 -   [Multicollinearity]
 -   [Influential points]
     -   [Leverage]
--   [Generalized Linear Models]
-    -   [Bernoulli e Poisson]
-    -   [Stima dei parametri]
+-   [Modelli Lineari Generalizzati (GLM)]
+    -   [Devianza]
+    -   [Residui]
 
 ## Analisi dei residui
 
