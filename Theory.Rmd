@@ -986,138 +986,215 @@ points(x[infl_points], leverage[infl_points], col = "blue", pch = 19)
 Nota che nell'esempio abbiamo utilizzato una soglia di leverage arbitraria (2 volte la media) per identificare i punti influenti.
 In un'applicazione pratica, è consigliabile considerare la soglia in base al contesto del problema e all'analisi dei dati.
 
-## Generalized Linear Models
 
-I Modelli Lineari Generalizzati (GLM) forniscono un quadro flessibile per estendere la regressione lineare classica a una vasta gamma di tipi di dati.
-Nei GLM, manteniamo un predittore lineare, indicato come η, che è una combinazione dei predittori X e dei coefficienti β.
-L'innovazione cruciale risiede nell'uso di una funzione di collegamento g(⋅), che connette il predittore lineare alla media della variabile di risposta.
+## Modelli Lineari Generalizzati (GLM)
 
-$$
-η = X\beta
-$$
+I Modelli Lineari Generalizzati (GLM) estendono il framework della regressione lineare per gestire un'ampia gamma di distribuzioni dei dati e tipologie di risposte. A differenza della regressione lineare tradizionale, i GLM possono accomodare distribuzioni di errori non normali e modellare relazioni tra predittori e risposte attraverso una funzione di collegamento.
 
-Per problemi di classificazione binaria, come la regressione logistica, è comunemente utilizzata la funzione di collegamento logit.
-Questa funzione trasforma il predittore lineare nei logaritmi delle probabilità di successo.
-Per più di due categorie, è possibile utilizzare la regressione logistica multinomiale o ordinale, ciascuna con la sua opportuna funzione di collegamento.
+Un GLM è caratterizzato da tre componenti principali:
 
-La funzione di probabilità è espressa in questo modo: $$
-p = \frac{η}{1-η}
-$$ Se il rapoorto è 1, allora i due eventi hanno la stessa probabilità.
-Un risultato maggiore di uno indica una probabilità positiva (η), un rapporto minore di 1 indica una probabilità negativa (1 - η).
+1. **Componente Casuale (Distribuzione):**
+   La variabile di risposta \( Y \) segue una distribuzione di probabilità dalla famiglia esponenziale, che include distribuzioni comuni come normale, binomiale e di Poisson.
 
-La funzione logit ci permette di avere risultati nell'intervallo [$-\infty$, $+\infty$]
+2. **Componente Sistematica (Predittore Lineare):**
+   La relazione tra i predittori e il valore atteso della risposta è espressa attraverso un predittore lineare (\( \eta \)). Il predittore lineare è una combinazione dei predittori, ognuno moltiplicato per un parametro, e si collega alla media della risposta attraverso una funzione di collegamento.
 
-$$
-logit(η) = log( \frac{η}{1-η} )
-$$
+3. **Funzione di Collegamento:**
+   La funzione di collegamento (\( g(\mu) \)) stabilisce il collegamento tra il predittore lineare e la media della risposta. Trasforma la scala della variabile di risposta e assicura che il predittore lineare copra l'intera linea reale. Le funzioni di collegamento comuni includono logit, probit e identità.
 
-I GLM possono gestire varie distribuzioni di probabilità dalla famiglia esponenziale, consentendo una flessibilità nel trattare diversi tipi di dati.
-Ad esempio, la distribuzione gaussiana è utilizzata per risposte continue, quella binomiale per risultati binari e quella di Poisson per dati di conteggio.
+**Formulazione Matematica:**
+La forma generale di un GLM può essere rappresentata come segue:
 
-L'essenza dei GLM sta nella loro capacità di gestire scenari in cui vengono violate le assunzioni della regressione lineare classica, come la presenza di residui distribuiti normalmente.
-Scegliendo una funzione di collegamento e una distribuzione appropriate, i GLM affrontano problemi come la varianza non costante, distribuzioni asimmetriche o relazioni non lineari.
+\[ g(\mu) = X\beta \]
 
-La funzione inversa del logit, comunemente nota come la funzione logistica (o sigmoide), converte il predittore lineare (η) nella probabilità di successo (p).
-La sua espressione è la seguente:
+Dove:
+- \( g(\mu) \) è la funzione di collegamento.
+- \( \mu \) è il valore atteso della variabile di risposta.
+- \( X \) è la matrice dei predittori.
+- \( \beta \) è il vettore dei coefficienti.
 
-$$
-logit^{-1}(η) = p = \frac{e^η}{1 + e^{-η}} 
-$$
+**Esempi:**
 
-Questa funzione logistica trasforma l'intervallo infinito del predittore lineare in un intervallo compreso tra 0 e 1, rendendola adatta per modellare probabilità.
+1. **Regressione Logistica Binaria:**
+   - **Distribuzione:** Binomiale
+   - **Funzione di Collegamento:** Logit (log-rapporti di probabilità)
+   - **Equazione:** \( \text{logit}(\mu) = X\beta \)
 
-Nei modelli logistici, il predittore lineare (η) è espresso come una combinazione lineare dei predittori e dei relativi coefficienti.
-La funzione logistica trasforma quindi questo predittore lineare in probabilità, che può essere interpretata come la probabilità di appartenenza a una classe specifica nel caso di problemi di classificazione binaria.
+   **Descrizione:** La funzione di collegamento logit trasforma la probabilità di successo (\( \mu \)) in un predittore lineare. In questo caso, il modello logistic descrive come la log-odds della probabilità di successo sia lineare rispetto ai predittori.
 
-Quindi avremo che la probabilità equivale a:
+2. **Regressione di Poisson:**
+   - **Distribuzione:** Poisson
+   - **Funzione di Collegamento:** Log
+   - **Equazione:** \( \log(\mu) = X\beta \)
 
-$$
-odd = \frac{p(x_1,...,x_{p-1})}{1 - p(x_1,...,x_{p-1})} = \frac{P[Y = 1| X_1 = x_1, ... X_{p-1} = x_{p-1}]}{P[Y = 0| X_1 = x_1, ... X_{p-1} = x_{p-1}]}
-$$
+   **Descrizione:** Con la funzione di collegamento logaritmico, il modello di Poisson può gestire dati di conteggio, poiché connette il logaritmo naturale del valore atteso (\( \mu \)) a un predittore lineare.
 
-ed il suo logaritmo equivale alla combinazione linare dei predittori:
+3. **Regressione Gamma:**
+   - **Distribuzione:** Gamma
+   - **Funzione di Collegamento:** Inverso
+   - **Equazione:** \( \frac{1}{\mu} = X\beta \)
 
-$$
-log(\frac{p(x_1,...,x_{p-1})}{1 - p(x_1,...,x_{p-1})}) = \beta_0 + \beta_1X_1+ ... + \beta_{p-1}X_{p-1}
-$$
+   **Descrizione:** La funzione di collegamento inversa in un modello gamma è appropriata quando si modellano variabili con distribuzioni a coda pesante. Collega l'inverso del valore atteso (\( \mu \)) a un predittore lineare.
 
-che vengono mappati tra 0 e 1 con:
+### Devianza
 
-$$
-p(x_1,...,x_{p-1}) = \frac{e^{\beta_0 + \beta_1X_1+ ... + \beta_{p-1}X_{p-1}}}{1 + e^{\beta_0 + \beta_1X_1+ ... + \beta_{p-1}X_{p-1}}}
-$$
+La devianza è una misura della discrepanza tra il modello statistico e i dati osservati nei Modelli Lineari Generalizzati (GLM). In generale, la devianza è utilizzata per confrontare modelli alternativi e valutare quanto bene un modello si adatta ai dati. Nel contesto dei GLM, la devianza è particolarmente significativa perché tiene conto delle specifiche distribuzioni delle variabili di risposta.
 
-### Bernoulli e Poisson
+La devianza si calcola confrontando il modello fitted (previsto) con un modello null, spesso noto come modello null di saturazione. Il modello null rappresenta l'ipotesi che tutti i parametri del modello siano uguali a zero, indicando l'assenza di effetti predittori. La devianza è data dalla seguente formula:
 
-I GLM estendono i modelli lineari tradizionali per adattarsi a una vasta gamma di distribuzioni e strutture di dati.
-Questi modelli sono utili quando la distribuzione dei dati o la relazione tra la risposta e i predittori non segue una distribuzione normale.
+\[ D = 2 \times \left( \ell(\hat{\beta}) - \ell(\beta_0) \right) \]
 
-Le funzioni di densità di probabilità sono funzioni matematiche che descrivono la probabilità di ottenere un particolare risultato in una variabile casuale.
-Sono utilizzate per modellare la distribuzione di probabilità di una variabile casuale e forniscono informazioni sulla likelihood (verosimiglianza) di osservare specifici valori.
+Dove:
+- \( \ell(\hat{\beta}) \) è il log-likelihood del modello fitted.
+- \( \ell(\beta_0) \) è il log-likelihood del modello null.
+- \( D \) è la devianza.
 
-La funzione densità per le famiglie parametriche nel contesto dei modelli lineari generalizzati (GLM) può essere rappresentata come:
+Poiché i GLM utilizzano la famiglia esponenziale di distribuzioni, la devianza assume una forma specifica per diverse distribuzioni.
 
-$$ f(y; \theta, \phi) = \exp\left\{\frac{y\theta - b(\theta)}{a(\phi)} + c(y, \phi)\right\} $$
+**Formule della Verosimiglianza:**
 
-Dove: 
+1. **Modello Normale:**
+   La verosimiglianza nel caso di una distribuzione normale è definita dalla densità di probabilità della distribuzione normale. Per una singola osservazione, la formula è:
+   \[ L(y_i | \mu_i, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(y_i - \mu_i)^2}{2\sigma^2}\right) \]
 
-- $y$ rappresenta la variabile di risposta.
-- $\theta$ è il parametro canonico associato alla funzione di collegamento.
-- $\phi$ è il parametro di dispersione.
-- $a(\phi)$, $b(\theta)$, e $c(y, \phi)$ sono funzioni specifiche della famiglia di distribuzione scelta.
+   Dove:
+   - \( y_i \) è l'osservazione i-esima.
+   - \( \mu_i \) è il valore atteso della variabile di risposta i-esima.
+   - \( \sigma^2 \) è la varianza.
 
-Questa formula è una forma generale che può essere utilizzata per rappresentare la funzione di densità di molte distribuzioni incluse nelle famiglie parametriche dei GLM.
-Le funzioni $a(\phi)$, $b(\theta)$, e $c(y, \phi)$ variano in base alla distribuzione specifica.
+2. **Modello di Poisson:**
+   La verosimiglianza nel caso di una distribuzione di Poisson è definita come segue:
+   \[ L(y_i | \lambda_i) = \frac{\lambda_i^{y_i} \exp(-\lambda_i)}{y_i!} \]
 
-**Normale**: 
+   Dove:
+   - \( y_i \) è l'osservazione i-esima.
+   - \( \lambda_i \) è il valore atteso della variabile di risposta i-esima.
 
-  Funzione di densità: $f(x; \mu, \sigma) = \frac{1}{\sqrt{2\pi}\sigma} \exp\left(-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2\right)$
-    
-  Funzione di collegamento: $g(ξ) = ξ$
 
-**Poisson:**
+**Interpretazione:**
+La devianza può essere interpretata come una misura della discrepanza tra il modello fitted e il modello null. Un valore di devianza più basso indica una migliore adattabilità del modello ai dati. Tuttavia, poiché la devianza è una misura assoluta, è spesso utilizzato il concetto di devianza residua, che è la devianza divisa per il numero di gradi di libertà del modello. Questo consente un confronto più equo tra modelli con differenti complessità.
 
-  Funzione di densità: $f(y; \lambda) = \frac{e^{-\lambda} \lambda^y}{y!}$
+**Contributo delle Componenti:**
+Nel contesto dei GLM, la devianza è spesso scomposta in tre componenti principali:
 
-  Funzione di collegamento: $g(ξ) = log(ξ)$
+1. **Modello Fitted Deviance (\(D_{\text{fitted}}\)):**
+   Misura la discrepanza tra il modello fitted e i dati osservati.
 
-**Bernoulli:**
+2. **Null Deviance (\(D_{\text{null}}\)):**
+   Misura la discrepanza tra il modello null e i dati osservati.
 
-  Funzione di densità: $f(y; p) = p^y (1-p)^{1-y}$
+3. **Residual Deviance (\(D_{\text{residual}}\)):**
+   Rappresenta la devianza residua, cioè la discrepanza non spiegata dal modello fitted.
 
-  Funzione di collegamento: $g(ξ) = log(\frac{ξ}{1-ξ})$
+L'utilizzo di queste componenti permette di comprendere come la devianza è distribuita tra il modello fitted, il modello null e la devianza residua.
 
-**Gamma:**
+**Confronto tra Modelli:**
+Il test di devianza è spesso utilizzato per confrontare modelli alternativi. La differenza nella devianza tra due modelli segue approssimativamente una distribuzione chi-quadro sotto l'ipotesi nulla che i due modelli siano equivalenti. Questo test può essere utilizzato per valutare l'aggiunta di predittori al modello o per confrontare modelli con differenti specifiche di distribuzione della risposta.
 
-  Funzione di densità: $f(x; k, \theta) = \frac{1}{\Gamma(k) \theta^k} x^{k-1} e^{-\frac{x}{\theta}}$
+**Esempio di Devianza:**
+```{r}
+# Carichiamo un dataset di esempio in R
+data(mtcars)
 
-  Funzione di collegamento: $g(ξ) = -\frac{1}{ξ}$
+# Creiamo un modello di Poisson
+model_poisson <- glm(vs ~ wt + hp, family = poisson, data = mtcars)
 
-Dove la funzione di collegamento serve a stabilire una relazione tra il valore medio della variabile di risposta e la combinazione lineare dei predittori.
+# Calcoliamo la devianza
+deviance_value <- deviance(model_poisson)
 
-### Stima dei parametri
+cat("Devianza del Modello di Poisson:", deviance_value, "\n")
+
+```
+
+In questo esempio, calcoliamo e visualizziamo la devianza residua di un modello di Poisson.
+
+### Residui
+
+**Funzione dei Residui nei GLM:**
+Nei Modelli Lineari Generalizzati (GLM), i residui svolgono un ruolo cruciale nel valutare l'adattamento del modello ai dati e nel verificare la validità delle ipotesi dietro il modello. A differenza dei Modelli Lineari (LM), i residui nei GLM sono calcolati considerando la distribuzione della risposta specifica del modello.
+
+1. **Misurare la Bontà di Adattamento:**
+   - I residui nei GLM sono utilizzati per valutare la bontà di adattamento del modello. Se il modello si adatta bene ai dati, ci si aspetta che i residui abbiano una distribuzione che riflette la distribuzione della risposta specificata nel GLM.
+
+2. **Indicazioni sulla Struttura dei Dati:**
+   - Nei GLM, la scelta della distribuzione della risposta e della funzione di legame può variare in base alla natura dei dati. I residui forniscono indicazioni sulla struttura dei dati e sulla validità delle ipotesi del modello.
+
+3. **Diagnosticare Devianza:**
+   - La devianza, una misura della differenza tra il modello completo e uno più semplice, può essere diagnosticata attraverso i residui. Residui devianti e standardized deviance residuals sono spesso utilizzati per individuare modelli non adatti ai dati.
+
+**Differenze tra Residui nei GLM e nei LM:**
+Le principali differenze tra i residui nei GLM e nei LM riguardano la distribuzione della risposta e la funzione di legame.
+
+1. **Distribuzione della Risposta:**
+   - Nei GLM, i residui sono calcolati tenendo conto della distribuzione della risposta specificata nel modello. Ad esempio, nei modelli di Poisson, i residui devono adattarsi alla distribuzione di Poisson.
+   - Nei LM, i residui sono basati sull'assunzione che la risposta sia distribuita normalmente.
+
+2. **Funzione di Legame:**
+   - La funzione di legame nei GLM determina come il valore atteso della risposta è collegato alla combinazione lineare dei predittori. La scelta della funzione di legame influenza i residui.
+   - Nei LM, la funzione di legame è identità, e i residui riflettono semplicemente la differenza tra i valori osservati e quelli previsti.
+
+**Esempio di Calcolo dei Residui in un Modello GLM:**
+```{r}
+suppressWarnings({
+# Carichiamo un dataset di esempio in R con una distribuzione di Poisson
+data(faithful, package = "datasets")
+
+# Creiamo un modello di Poisson
+modello_poisson <- glm(eruptions ~ waiting, family = poisson, data = faithful)
+
+# Calcoliamo i residui devianti
+residui_devianti <- residuals(modello_poisson, type = "deviance")
+
+# Visualizziamo i primi 10 residui devianti
+head(residui_devianti)
+})
+```
+
+**Analisi dei Residui:**
+I residui devianti riflettono le differenze tra i valori osservati e quelli previsti in termini della devianza del modello. Un residuo deviante elevato indica che l'osservazione contribuisce in modo significativo alla devianza complessiva del modello, indicando un'eventuale influenza o deviazione dal modello.
+
+- Residui positivi indicano che l'osservazione ha contribuito più del previsto alla devianza.
+- Residui negativi indicano che l'osservazione ha contribuito meno del previsto alla devianza.
+- Residui pari a zero indicano una perfetta adattabilità dell'osservazione al modello.
+
+**Esempio**
+
+Per questo esempio, useremo il dataset di esempio "mtcars" di R per creare un modello di Poisson utilizzando un modello generalizzato lineare (GLM). Lo scopo del modello sarà prevedere il numero di cilindri ("cyl") in base alle altre variabili presenti nel dataset.
 
 ```{r}
-# Creiamo un set di dati fittizio
-set.seed(123)
-dati <- data.frame(
-  ore_di_studio = rnorm(100, mean = 20, sd = 5),
-  successo = sample(c(0, 1), 100, replace = TRUE)
-)
+# Caricamento del dataset "mtcars"
+data(mtcars)
 
-# Adattiamo il modello di regressione logistica
-modello_logistico <- glm(successo ~ ore_di_studio, data = dati, family = binomial)
+# Esploriamo le prime righe del dataset
+head(mtcars)
 
-# Visualizziamo un riepilogo del modello
-summary(modello_logistico)
+# Creiamo un modello di Poisson per prevedere il numero di cilindri in base alle altre variabili
+modello_glm <- glm(cyl ~ mpg + disp + hp + drat + wt + qsec + vs + am + gear + carb, 
+                   data = mtcars, family = poisson)
 
-# Creiamo nuovi dati per fare previsioni
-nuovi_dati <- data.frame(ore_di_studio = seq(10, 30, length.out = 100))
+# Visualizziamo il summary del modello
+summary(modello_glm)
 
-# Effettuiamo previsioni
-previsioni <- predict(modello_logistico, newdata = nuovi_dati, type = "response")
+# Analizziamo le variabili indipendenti
+par(mfrow = c(2, 2))
+plot(modello_glm)
 
-# Visualizziamo i risultati
-plot(dati$ore_di_studio, dati$successo, pch = 16, col = "blue", xlab = "Ore di Studio", ylab = "Probabilità di Successo")
-lines(nuovi_dati$ore_di_studio, previsioni, col = "red", lw = 2)
+# Eseguiamo l'analisi della varianza (ANOVA)
+anova_result <- anova(modello_glm, test = "Chi")
+
+# Visualizziamo la tabella ANOVA
+print(anova_result)
+
+# Calcoliamo l'R-squared del modello
+r_squared <- 1 - (modello_glm$deviance / modello_glm$null.deviance)
+cat("R-squared:", r_squared, "\n")
+
+# Effettuiamo previsioni su nuovi dati (per esempio, le prime 5 osservazioni del dataset)
+nuovi_dati <- mtcars[1:5, ]
+previsioni <- predict(modello_glm, newdata = nuovi_dati, type = "response")
+cat("Previsioni per le prime 5 osservazioni:\n", previsioni, "\n")
 ```
+
+In questo esempio, abbiamo creato un modello di Poisson utilizzando il numero di cilindri come variabile dipendente e le altre variabili del dataset "mtcars" come variabili indipendenti. Successivamente, abbiamo eseguito un'analisi completa del modello, compresi il summary, la visualizzazione delle variabili indipendenti, l'analisi della varianza (ANOVA), il calcolo dell'R-squared e la previsione su nuovi dati.
+
+
