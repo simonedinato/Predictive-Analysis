@@ -117,6 +117,8 @@ In questo caso, i residui mostrano la presenza di outlier evidenti, che possono 
 Gli outlier possono comportare problemi nei modelli statistici, specialmente nei modelli di regressione, perché possono influenzare notevolmente i risultati.
 Ad esempio, possono influenzare la stima dei coefficienti del modello e rendere il modello meno affidabile.
 
+Torna al [Summary]
+
 ## Decomposition sum of squares
 
 La "decomposition of sum of squares" (scomposizione della somma dei quadrati) è un concetto fondamentale nell'analisi della varianza (ANOVA) e nella regressione statistica.
@@ -208,6 +210,8 @@ ggplot(data = test_data, aes(x = speed, y = dist)) +
 
 ```
 
+Torna al [Summary]
+
 ## Empirical Covariance and Correlation
 
 L'empirical covariance e la correlazione empirica sono misure statistiche utilizzate per quantificare la relazione tra due variabili in un insieme di dati osservati.
@@ -257,6 +261,8 @@ Poi, utilizziamo la funzione cor() per calcolare la correlazione di Pearson tra 
 Il valore di correlazione verrà stampato a schermo.
 Un valore vicino a 1 indica una correlazione positiva forte, un valore vicino a -1 indica una correlazione negativa forte, mentre un valore vicino a 0 indica una scarsa correlazione tra le due variabili.
 
+Torna al [Summary]
+
 ## Multiple Linear Regression
 
 La "Multiple Linear Regression" (Regressione Lineare Multipla) è una tecnica di modellazione statistica utilizzata per analizzare la relazione tra una variabile dipendente (o target) e due o più variabili indipendenti (o predittive).
@@ -298,6 +304,8 @@ cat("R-squared (manual calculation):", R_squared, "\n")
 In sintesi, il modello di regressione lineare multipla suggerisce che il peso del veicolo influenza il consumo di carburante.
 La potenza del motore e il tempo di accelerazione non sono significative per la spiegazione di questo modello.
 Nonostante ciò il modello spiega l'83% dei della variazione nei consumi di carburante.
+
+Torna al [Summary]
 
 ## Matrix approach to Regression
 
@@ -395,6 +403,8 @@ surface3d(x = x1_range, y = x2_range, z = matrix(grid$Y_pred, nrow = length(x1_r
 
 L'interpretazione geometrica ci consente di vedere come il piano di regressione si adatta ai dati nello spazio tridimensionale e come i coefficienti stimati influenzano la posizione e l'inclinazione del piano rispetto ai dati osservati.
 Questo fornisce una visualizzazione intuitiva della relazione tra le variabili indipendenti e dipendenti nel contesto della regressione lineare.
+
+Torna al [Summary]
 
 ## Distribuzione F & Anova Table {#distribuzione-f-anova-table}
 
@@ -516,6 +526,8 @@ if (p_value < alpha) {
 }
 ```
 
+Torna al [Summary]
+
 ## Nested Models
 
 Nei modelli statistici, un "nested model" (modello nidificato) si verifica quando un modello più complesso o generale può essere suddiviso o semplificato in un modello più semplice o specifico.
@@ -634,6 +646,8 @@ Alla fine, otteniamo il modello con l'AIC più basso, che dovrebbe essere una ve
 
 La "variable selection" utilizzando AIC e step() è un potente strumento per migliorare la qualità e l'interpretabilità dei modelli statistici, in particolare quando si hanno molti potenziali predittori.
 
+Torna al [Summary]
+
 ## Categorical Predictors and Interactions
 
 Nell'analisi statistica, i "categorical predictors" (predittori categorici) sono variabili che rappresentano categorie o gruppi distinti anziché valori numerici.
@@ -712,6 +726,8 @@ summary(modello)
 
 I risultati indicano che il colore del prodotto (rosso o verde) non ha un impatto significativo sul voto.
 L'intercetta, che rappresenta il colore "Blu," è significativa, ma il modello nel suo insieme non è molto efficace nel spiegare la variazione nei voti.
+
+Torna al [Summary]
 
 ## Model Checking
 
@@ -829,6 +845,8 @@ summary(model_with_transform)
 Le trasformazioni sono strumenti potenti per adattare i modelli ai dati in modo più accurato quando le relazioni tra variabili non sono lineari o quando le assunzioni del modello non sono soddisfatte.
 Tuttavia, è importante scegliere con saggezza le trasformazioni per evitare il sovradattamento e garantire che i risultati siano interpretabili.
 
+Torna al [Summary]
+
 ## Multicollinearity
 
 La multicollinearità si verifica quando due o più variabili indipendenti in un modello di regressione sono fortemente correlate tra loro.
@@ -883,6 +901,8 @@ Questo è un buon segno, poiché significa che le variabili non sono fortemente 
 I valori VIF ci aiuteranno a valutare l'entità della collinearità nel modello.
 Valori VIF più elevati indicano una multicollinearità più forte, e valori al di sopra di una certa soglia (ad esempio, VIF \> 5) possono suggerire la necessità di affrontare la collinearità, ad esempio, rimuovendo una delle variabili predittive correlate.
 
+Torna al [Summary]
+
 ## Influential points
 
 I punti influenti si riferiscono a osservazioni nei dati che hanno un impatto significativo sui risultati di un'analisi statistica, come una regressione lineare.
@@ -896,6 +916,8 @@ Ci sono diverse metriche utilizzate per identificare i punti influenti, tra cui 
 Nel contesto della regressione, i punti influenti possono derivare da outlier nei dati, dati errati o punti che influenzano notevolmente la stima dei parametri.
 Identificare e trattare i punti influenti è importante per garantire che il modello di regressione sia affidabile e rappresenti accuratamente i dati.
 La rimozione di punti influenti può migliorare la bontà di adattamento del modello e l'accuratezza delle previsioni.
+
+Torna al [Summary]
 
 ```{r}
 # Carichiamo il dataset di esempio
@@ -1008,6 +1030,7 @@ La forma generale di un GLM può essere rappresentata come segue:
 \[ g(\mu) = X\beta \]
 
 Dove:
+
 - \( g(\mu) \) è la funzione di collegamento.
 - \( \mu \) è il valore atteso della variabile di risposta.
 - \( X \) è la matrice dei predittori.
@@ -1045,6 +1068,7 @@ La devianza si calcola confrontando il modello fitted (previsto) con un modello 
 \[ D = 2 \times \left( \ell(\hat{\beta}) - \ell(\beta_0) \right) \]
 
 Dove:
+
 - \( \ell(\hat{\beta}) \) è il log-likelihood del modello fitted.
 - \( \ell(\beta_0) \) è il log-likelihood del modello null.
 - \( D \) è la devianza.
@@ -1197,4 +1221,4 @@ cat("Previsioni per le prime 5 osservazioni:\n", previsioni, "\n")
 
 In questo esempio, abbiamo creato un modello di Poisson utilizzando il numero di cilindri come variabile dipendente e le altre variabili del dataset "mtcars" come variabili indipendenti. Successivamente, abbiamo eseguito un'analisi completa del modello, compresi il summary, la visualizzazione delle variabili indipendenti, l'analisi della varianza (ANOVA), il calcolo dell'R-squared e la previsione su nuovi dati.
 
-
+Torna al [Summary]
