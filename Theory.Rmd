@@ -117,7 +117,7 @@ In questo caso, i residui mostrano la presenza di outlier evidenti, che possono 
 Gli outlier possono comportare problemi nei modelli statistici, specialmente nei modelli di regressione, perché possono influenzare notevolmente i risultati.
 Ad esempio, possono influenzare la stima dei coefficienti del modello e rendere il modello meno affidabile.
 
-Torna al [Summary]
+[Torna al [Summary]]
 
 ## Decomposition sum of squares
 
@@ -169,6 +169,8 @@ R_squared <- SSR / SST
 R_squared
 ```
 
+[Torna al [Summary]]
+
 ## Optimal Prediction
 
 L'argomento dell'"Optimal Prediction" (predizione ottimale) riguarda la determinazione di un modello predittivo che sia il migliore possibile in termini di accuratezza nel prevedere gli eventi futuri.
@@ -210,7 +212,7 @@ ggplot(data = test_data, aes(x = speed, y = dist)) +
 
 ```
 
-Torna al [Summary]
+[Torna al [Summary]]
 
 ## Empirical Covariance and Correlation
 
@@ -261,7 +263,7 @@ Poi, utilizziamo la funzione cor() per calcolare la correlazione di Pearson tra 
 Il valore di correlazione verrà stampato a schermo.
 Un valore vicino a 1 indica una correlazione positiva forte, un valore vicino a -1 indica una correlazione negativa forte, mentre un valore vicino a 0 indica una scarsa correlazione tra le due variabili.
 
-Torna al [Summary]
+[Torna al [Summary]]
 
 ## Multiple Linear Regression
 
@@ -305,7 +307,7 @@ In sintesi, il modello di regressione lineare multipla suggerisce che il peso de
 La potenza del motore e il tempo di accelerazione non sono significative per la spiegazione di questo modello.
 Nonostante ciò il modello spiega l'83% dei della variazione nei consumi di carburante.
 
-Torna al [Summary]
+[Torna al [Summary]]
 
 ## Matrix approach to Regression
 
@@ -357,6 +359,8 @@ summary(model)$r.squared
 -   Esame (Examination): Un aumento nei punteggi di esame è associato a una diminuzione della fertilità nelle regioni svizzere. Questo suggerisce che un migliore stato di salute generale, misurato tramite l'esame, è correlato a una fertilità più bassa.
 -   Educazione (Education): Un aumento nel livello di educazione è correlato a una riduzione della fertilità. Le regioni con un livello di istruzione più elevato tendono ad avere una fertilità più bassa.
 
+[Torna al [Summary]]
+
 ## Geometrical Interpretation
 
 L'interpretazione geometrica della regressione lineare è un approccio concettuale che utilizza uno spazio tridimensionale (o superiore) per rappresentare visivamente il modello di regressione.
@@ -404,7 +408,7 @@ surface3d(x = x1_range, y = x2_range, z = matrix(grid$Y_pred, nrow = length(x1_r
 L'interpretazione geometrica ci consente di vedere come il piano di regressione si adatta ai dati nello spazio tridimensionale e come i coefficienti stimati influenzano la posizione e l'inclinazione del piano rispetto ai dati osservati.
 Questo fornisce una visualizzazione intuitiva della relazione tra le variabili indipendenti e dipendenti nel contesto della regressione lineare.
 
-Torna al [Summary]
+[Torna al [Summary]]
 
 ## Distribuzione F & Anova Table {#distribuzione-f-anova-table}
 
@@ -526,7 +530,7 @@ if (p_value < alpha) {
 }
 ```
 
-Torna al [Summary]
+[Torna al [Summary]]
 
 ## Nested Models
 
@@ -595,6 +599,8 @@ if (anova_result[2, "Pr(>F)"] < alpha) {
 
 ```
 
+[Torna al [Summary]]
+
 ## Variable Selection in R
 
 La "variable selection" (selezione delle variabili) in R è un processo attraverso il quale si scelgono le variabili più rilevanti da includere in un modello statistico.
@@ -646,7 +652,7 @@ Alla fine, otteniamo il modello con l'AIC più basso, che dovrebbe essere una ve
 
 La "variable selection" utilizzando AIC e step() è un potente strumento per migliorare la qualità e l'interpretabilità dei modelli statistici, in particolare quando si hanno molti potenziali predittori.
 
-Torna al [Summary]
+[Torna al [Summary]]
 
 ## Categorical Predictors and Interactions
 
@@ -727,7 +733,7 @@ summary(modello)
 I risultati indicano che il colore del prodotto (rosso o verde) non ha un impatto significativo sul voto.
 L'intercetta, che rappresenta il colore "Blu," è significativa, ma il modello nel suo insieme non è molto efficace nel spiegare la variazione nei voti.
 
-Torna al [Summary]
+[Torna al [Summary]]
 
 ## Model Checking
 
@@ -750,6 +756,8 @@ Questi includono:
 
 Rispettare queste assunzioni è importante per garantire che le stime del modello siano affidabili e che le conclusioni siano valide.
 Se una o più di queste assunzioni non sono soddisfatte, potrebbero essere necessarie correzioni al modello o ai dati stessi.
+
+[Torna al [Summary]]
 
 ## Transformations
 
@@ -845,7 +853,7 @@ summary(model_with_transform)
 Le trasformazioni sono strumenti potenti per adattare i modelli ai dati in modo più accurato quando le relazioni tra variabili non sono lineari o quando le assunzioni del modello non sono soddisfatte.
 Tuttavia, è importante scegliere con saggezza le trasformazioni per evitare il sovradattamento e garantire che i risultati siano interpretabili.
 
-Torna al [Summary]
+[Torna al [Summary]]
 
 ## Multicollinearity
 
@@ -901,7 +909,7 @@ Questo è un buon segno, poiché significa che le variabili non sono fortemente 
 I valori VIF ci aiuteranno a valutare l'entità della collinearità nel modello.
 Valori VIF più elevati indicano una multicollinearità più forte, e valori al di sopra di una certa soglia (ad esempio, VIF \> 5) possono suggerire la necessità di affrontare la collinearità, ad esempio, rimuovendo una delle variabili predittive correlate.
 
-Torna al [Summary]
+[Torna al [Summary]]
 
 ## Influential points
 
@@ -916,8 +924,6 @@ Ci sono diverse metriche utilizzate per identificare i punti influenti, tra cui 
 Nel contesto della regressione, i punti influenti possono derivare da outlier nei dati, dati errati o punti che influenzano notevolmente la stima dei parametri.
 Identificare e trattare i punti influenti è importante per garantire che il modello di regressione sia affidabile e rappresenti accuratamente i dati.
 La rimozione di punti influenti può migliorare la bontà di adattamento del modello e l'accuratezza delle previsioni.
-
-Torna al [Summary]
 
 ```{r}
 # Carichiamo il dataset di esempio
@@ -1008,6 +1014,7 @@ points(x[infl_points], leverage[infl_points], col = "blue", pch = 19)
 Nota che nell'esempio abbiamo utilizzato una soglia di leverage arbitraria (2 volte la media) per identificare i punti influenti.
 In un'applicazione pratica, è consigliabile considerare la soglia in base al contesto del problema e all'analisi dei dati.
 
+[Torna al [Summary]]
 
 ## Modelli Lineari Generalizzati (GLM)
 
@@ -1221,4 +1228,4 @@ cat("Previsioni per le prime 5 osservazioni:\n", previsioni, "\n")
 
 In questo esempio, abbiamo creato un modello di Poisson utilizzando il numero di cilindri come variabile dipendente e le altre variabili del dataset "mtcars" come variabili indipendenti. Successivamente, abbiamo eseguito un'analisi completa del modello, compresi il summary, la visualizzazione delle variabili indipendenti, l'analisi della varianza (ANOVA), il calcolo dell'R-squared e la previsione su nuovi dati.
 
-Torna al [Summary]
+[[Torna al [Summary]]]
