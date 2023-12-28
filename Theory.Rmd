@@ -24,22 +24,17 @@ Spero che questo documento ti aiuti a comprendere meglio questa materia di studi
     -   [Scomposizione Somma Di Quadrati]
     -   [Predizione Ottimale]
     -   [Covarianza e Correlazione Empirica]
-        -   [Covarianza Empirica]
-        -   [Correlazione Empirica]
 -   [Regressione Lineare Multipla]
     -   [Approcio Matriciale]
     -   [Interpretazione Geometrica]
     -   [Distribuzione F & Anova Table]
-        -   [Ipotesi]
-    -   [Modelli Annidati]
-    -   [Variable Selection in R]
+    -   [Modelli Nidificati]
+    -   [Selezione delle variabili]
     -   [Predizioni Categoriche]
-        -   [Fattori Con Più Di Due Categorie]
     -   [Controllo del Modello]
     -   [Transformazioni]
     -   [Multicollinearità]
     -   [Punti Influenti]
-        -   [Leverage]
 -   [Modelli Lineari Generalizzati]
     -   [Devianza]
     -   [Residui]
@@ -74,7 +69,7 @@ L'intercetta rappresenta il valore medio di y quando x è uguale a 0. Il coeffic
 
 Serve a verificare se il modello soddisfa le assunzioni della regressione e per identificare eventuali pattern o problemi nei dati.
 
-Esempio 1:
+**Esempio 1:**
 
 ```{r}
 # Generiamo dati casuali con residui normalmente distribuiti
@@ -98,7 +93,7 @@ Quando diciamo che i residui hanno una distribuzione normale, significa che i re
 Questa è un'importante assunzione nei modelli di regressione lineare, in quanto indica che gli errori casuali nel modello sono distribuiti in modo simmetrico intorno a zero e non mostrano alcun tipo di tendenza sistemica.
 Se questa assunzione è soddisfatta, i test di significatività dei coefficienti del modello e le stime di intervallo di confidenza saranno affidabili.
 
-Esempio 2:
+**Esempio 2:**
 
 ```{r}
 # Generiamo dati casuali con residui che seguono una distribuzione a U
@@ -120,7 +115,7 @@ abline(h = 0, col = "red")
 
 In questo caso, i residui mostrano un effetto a U, indicando una violazione dell'assunzione di omoschedasticità(i residui non mostrano un aumento o una diminuzione sistematica nella dispersione al variare dei valori delle variabili indipendenti).
 
-Esempio 3:
+**Esempio 3:**
 
 ```{r}
 # Generiamo dati casuali con outlier nei residui
@@ -243,7 +238,7 @@ ggplot(data = test_data, aes(x = speed, y = dist)) +
 La covarianza e correlazione empirica sono misure statistiche utilizzate per quantificare la relazione tra due variabili in un insieme di dati osservati.
 Queste misure sono strettamente legate e sono spesso utilizzate per esaminare la relazione lineare tra due variabili.
 
-#### Covarianza Empirica
+**Covarianza Empirica:**
 
 La covarianza empirica è una misura della tendenza di due variabili a variare insieme.
 Indica se le due variabili crescono o diminuiscono simultaneamente (covarianza positiva) o se una aumenta mentre l'altra diminuisce (covarianza negativa).
@@ -251,7 +246,7 @@ La formula per calcolare la covarianza empirica tra due variabili X e Y in un se
 
 $$  Cov(X,Y) = \frac{1}{n-1} \sum_{i = 1}^n {(X_i - \overline{X})(Y_i - \overline{Y})} $$
 
-#### Correlazione Empirica
+**Correlazione Empirica:**
 
 La correlazione empirica è una versione standardizzata della covarianza empirica e misura la forza e la direzione di una relazione lineare tra due variabili.
 La correlazione empirica è sempre compresa tra -1 e 1.
@@ -313,17 +308,6 @@ model <- lm(mpg ~ wt + hp + qsec, data = mtcars)
 
 # Visualizza un riepilogo del modello
 summary(model)
-
-# Effettua previsioni con il modello
-predictions <- predict(model, newdata = mtcars)
-
-# Valuta le prestazioni del modello
-SSR <- sum((mtcars$mpg - predictions)^2)  # Somma dei quadrati residui
-SST <- sum((mtcars$mpg - mean(mtcars$mpg))^2)  # Somma totale dei quadrati
-
-R_squared <- 1 - (SSR / SST)
-
-cat("R-squared (manual calculation):", R_squared, "\n")
 ```
 
 In sintesi, il modello di regressione lineare multipla suggerisce che il peso del veicolo influenza il consumo di carburante.
@@ -339,10 +323,7 @@ Questo approccio utilizza notazioni matematiche e matrici per semplificare i cal
 
 Ci permette di passare da: $$ Y = \beta_0 + \beta_1X_1 + ... + \beta_nX_n + \epsilon $$ a : $$ Y = \beta X + \epsilon   $$
 
-Per stimare i coefficienti β del modello, si utilizzano metodi come il metodo dei minimi quadrati.
-L'obiettivo è trovare i valori di β che minimizzano la somma dei quadrati degli errori (ε).
-
-a soluzione matriciale per stimare i coefficienti β é: $$ \beta = ((X^T X)^{-1} X^T Y) $$
+La soluzione matriciale per stimare i coefficienti β é: $$ \beta = ((X^T X)^{-1} X^T Y) $$
 
 L'approccio matriciale semplifica la rappresentazione e la risoluzione dei modelli di regressione, specialmente quando si lavora con più variabili indipendenti.
 Inoltre, è utile per comprendere come eseguire calcoli di regressione in modo più efficiente utilizzando matrici e algebra lineare, specialmente in contesti di apprendimento automatico in cui le dimensioni dei dati possono essere elevate.
@@ -367,16 +348,14 @@ Y <- swiss$Fertility
 beta <- solve(t(X) %*% X) %*% t(X) %*% Y
 
 # Visualizza i coefficienti del modello
-cat("Coefficienti del modello:")
 print(beta)
 
 # Effettua previsioni con il modello matriciale
 predictions <- X %*% beta
 
 # Valuta le prestazioni del modello
-model <- lm(Y ~ 0 + predictions)  # 0 indica di non calcolare l'intercetta
-summary(model)$r.squared  
-# Restituisce il valore di R-squared
+model <- lm(Y ~ Examination + Education, data = swiss)  # 0 indica di non calcolare l'intercetta
+summary(model) 
 ```
 
 -   Esame (Examination): Un aumento nei punteggi di esame è associato a una diminuzione della fertilità nelle regioni svizzere. Questo suggerisce che un migliore stato di salute generale, misurato tramite l'esame, è correlato a una fertilità più bassa.
@@ -408,12 +387,7 @@ data <- data.frame(X1, X2, Y)
 
 # Adatta il modello di regressione lineare
 model <- lm(Y ~ X1 + X2, data = data)
-
-# Estrai i coefficienti stimati
-coefficients <- coef(model)
-
-# Visualizza i coefficienti
-print(coefficients)
+summary(model)
 
 # Creazione di una griglia di punti
 x1_range <- seq(min(X1), max(X1), length = 20)
@@ -443,15 +417,19 @@ Questo fornisce una visualizzazione intuitiva della relazione tra le variabili i
 
 ### Distribuzione F & Anova Table {#distribuzione-f-anova-table}
 
-La "distribuzione F" è una distribuzione di probabilità usata per confrontare varianze o dispersioni tra gruppi o modelli di regressione.
-Viene ampiamente utilizzata nell'analisi statistica, in particolare nelle analisi della varianza (ANOVA) e nei test di significatività dei modelli di regressione.
+L'ANOVA valuta globalmente se almeno una delle variabili indipendenti ha un effetto significativo sulla variabile dipendente, fornisce una statistica F e il relativo p-value. 
+Un p-value basso suggerisce che almeno una delle variabili indipendenti è significativa nel modello.
+L'ANOVA fornisce quindi una visione complessiva della significatività del modello nel suo complesso.
 
-La "tabella ANOVA" è uno strumento che calcola le varianze spiegate e non spiegate nei dati, consentendo di testare se ci sono differenze significative tra gruppi o fattori.
-La tabella ANOVA mostra la varianza tra gruppi e la varianza all'interno dei gruppi e calcola il "rapporto F", che viene utilizzato per valutare la significatività delle differenze.
+L'analisi della varianza (ANOVA) e i "signif. codes" nel summary del modello forniscono informazioni simili, ma si concentrano su aspetti diversi dell'analisi.
 
-In sintesi, la distribuzione F e la tabella ANOVA sono strumenti fondamentali nell'analisi statistica per testare e valutare le differenze tra gruppi o modelli di regressione.
+I "signif. codes" nel summary del modello forniscono una valutazione variabile per variabile, indicando la significatività statistica di ciascun coefficiente.
+Utilizza asterischi (\*) o altri simboli per indicare il livello di significatività, ad esempio, "\*\*\*" potrebbe indicare un livello di significatività molto elevato (p-value molto basso), mentre " " (spazio) potrebbe indicare non significativo.
+Questa parte del summary fornisce una visione più dettagliata sulla significatività di ciascuna variabile indipendente separatamente.
 
-Esempio 1:
+L'ANOVA valuta la significatività del modello nel suo insieme, mentre i "signif. codes" nel summary forniscono una visione dettagliata della significatività di ciascuna variabile indipendente.
+
+**Esempio 1:**
 
 ```{r}
 # Creiamo un dataset fittizio
@@ -466,25 +444,16 @@ anova_result <- aov(Punteggio ~ Gruppo, data = data)
 
 # Visualizziamo la tabella ANOVA
 summary(anova_result)
-
-# Calcoliamo il rapporto F
-f_statistic <- summary(anova_result)[[1]][["F value"]][1]
-
-# Calcoliamo il p-value associato al rapporto F
-p_value <- pf(f_statistic, df1 = 2, df2 = 57, lower.tail = FALSE)
-
-cat("Rapporto F:", f_statistic, "\n")
-cat("Valore p:", p_value, "\n")
 ```
 
 In questo esempio, eseguiamo un'ANOVA a un fattore per valutare le differenze nei punteggi tra i gruppi A, B e C.
 Il rapporto F e il valore p ci permettono di determinare se le differenze tra i gruppi sono statisticamente significative.
 
-I risultati dell'ANOVA suggeriscono che non ci sono differenze statisticamente significative tra i gruppi.
+I risultati suggeriscono che non ci sono differenze statisticamente significative tra i gruppi, ossia il variare del gruppo non influenza significativamente la variabile dipendente.
 La varianza tra i gruppi è molto piccola rispetto alla varianza all'interno dei gruppi, e il test F non è significativo.
 Questo può indicare che i gruppi sono simili tra loro per quanto riguarda la variabile in studio.
 
-Esempio 2:
+**Esempio 2:**
 
 ```{r}
 # Creiamo un dataset fittizio
@@ -503,52 +472,38 @@ summary(anova_result)
 ```
 
 In questo esempio, eseguiamo un'ANOVA a due fattori per esaminare le differenze nei punteggi in base al genere e al trattamento.
-La tabella ANOVA ci mostra se ci sono interazioni significative tra questi due fattori.
 
 Dalla tabella dell'ANOVA fornita, possiamo trarre le seguenti conclusioni:
 
 -   Il fattore "Trattamento" ha un forte effetto sulla variabile dipendente, con un valore di F elevato e un p-value molto basso, indicando che le differenze tra i trattamenti sono statisticamente significative (\*\*\*).
--   Il fattore "Genere" non ha un effetto significativo sulla variabile dipendente, con un valore di F basso e un p-value elevato (0.546).
--   L'interazione tra "Genere" e "Trattamento" non ha un effetto significativo sulla variabile dipendente, con un valore di F e un p-value non significativi (0.121 e 0.729, rispettivamente).
+-   Il fattore "Genere" non ha un effetto significativo sulla variabile dipendente, con un valore di F basso e un p-value elevato.
+-   L'interazione tra "Genere" e "Trattamento" non ha un effetto significativo sulla variabile dipendente, con un valore di F e un p-value non significativi.
 
-In sintesi, i risultati dell'ANOVA suggeriscono che il "Trattamento" è il principale driver delle differenze osservate nella variabile dipendente, mentre il "Genere" e l'interazione tra "Genere" e "Trattamento" non sembrano avere un effetto significativo.
+I risultati dell'ANOVA suggeriscono che il "Trattamento" è il principale driver delle differenze osservate nella variabile dipendente, mentre il "Genere" e l'interazione tra "Genere" e "Trattamento" non sembrano avere un effetto significativo.
 
 -   Un valore F maggiore di 1 suggerisce che i parametri o i fattori sono significativi, poiché la varianza spiegata è maggiore della varianza non spiegata.
 -   Un valore F vicino a 1 indica che il modello non spiega in modo significativo la variabilità nei dati.
 -   Il valore p associato all'F-value fornisce la probabilità che i risultati osservati siano dovuti al caso. Un valore p basso (di solito inferiore a 0.05) indica una significatività elevata, mentre un valore p alto suggerisce una mancanza di significatività.
 
-La valutazione della significatività dipende da entrambi i valori F e p, e il livello di significatività scelto è basato sulla specifica analisi e sulle convenzioni del campo di studio.
-
-#### Ipotesi
+**Sistema di ipotesi:**
 
 Nell'analisi statistica in cui si calcola un valore F, ci sono due ipotesi principali: l'ipotesi nulla (H0) e l'ipotesi alternativa (H1).
 
 Ipotesi Nulla (H0): L'ipotesi nulla afferma che non ci sono differenze significative tra i gruppi o i fattori considerati.
 In altre parole, l'ipotesi nulla sostiene che i parametri del modello o i fattori non hanno un effetto significativo sul risultato o che le differenze osservate sono casuali.
-Nel contesto dell'analisi con un valore F, l'H0 suggerirebbe che non ci sono differenze significative tra i gruppi o i fattori.
 
 Ipotesi Alternativa (H1 o HA): L'ipotesi alternativa è il contrario dell'ipotesi nulla.
 Sostiene che ci sono differenze significative tra i gruppi o i fattori considerati, e che le differenze osservate non sono casuali, ma sono dovute a un effetto significativo dei parametri del modello o dei fattori.
-Nel contesto dell'analisi con un valore F, l'ipotesi alternativa suggerirebbe che ci sono differenze significative tra i gruppi o i fattori.
-
-Quindi, quando si calcola un valore F e si esegue un test statistico, l'ipotesi nulla (H0) è che non ci siano differenze significative, mentre l'ipotesi alternativa (H1 o HA) è che ci siano differenze significative.
-L'obiettivo del test F è determinare se i dati forniscono prove sufficienti per respingere l'ipotesi nulla a favore dell'ipotesi alternativa, indicando che ci sono differenze significative tra i gruppi o i fattori considerati.
 
 Continuiamo l'esempio di prima:
 
 ```{r}
-# Visualizziamo la tabella ANOVA
-anova_summary <- summary(anova_result)
-print(anova_summary)
-
-# Estraiamo il valore F
-f_statistic <- anova_summary[[1]][["F value"]][3]  # Usiamo [3] per estrarre il valore relativo all'interazione
+model <- lm(Punteggio ~ Genere * Trattamento, data = data)
+summary(model)
 
 # Estraiamo il valore p
 p_value <- anova_summary[[1]][["Pr(>F)"]][3]  # Usiamo [3] per estrarre il valore relativo all'interazione
 
-cat("Valore F:", f_statistic, "\n")
-cat("Valore p:", p_value, "\n")
 
 # Scegliamo un livello di significatività (alpha)
 alpha <- 0.05
@@ -561,37 +516,37 @@ if (p_value < alpha) {
 }
 ```
 
+La F-statistic nel summary di un modello lineare (lm) rappresenta la statistica del test F per l'intero modello. Questo test verifica se c'è almeno una variabile indipendente nel modello che è significativamente associata alla variabile dipendente. In altre parole, valuta l'ipotesi nulla che tutti i coefficienti delle variabili indipendenti nel modello siano uguali a zero (cioè che non ci siano effetti).
+
+In breve la F-statistic suggerisce che almeno una delle interazioni tra "Genere" e "Trattamento" o almeno una delle principali effetti è significativa nel modello.
+
 [Torna all' [Indice]]
 
-### Modelli Annidati
+### Modelli Nidificati
 
-Nei modelli statistici, un "nested model" (modello nidificato) si verifica quando un modello più complesso o generale può essere suddiviso o semplificato in un modello più semplice o specifico.
+Nei modelli statistici, un "nested model" si verifica quando un modello più complesso o generale può essere suddiviso o semplificato in un modello più semplice o specifico.
 Il modello più semplice è considerato "nidificato" all'interno del modello più complesso, poiché contiene un sottoinsieme di parametri o vincoli del modello più generale.
 
 Nel contesto della regressione, i modelli nidificati sono spesso utilizzati per testare l'aggiunta di variabili indipendenti al modello al fine di valutare se le variabili aggiuntive migliorano significativamente la capacità di previsione o spiegazione del modello.
-I modelli nidificati sono anche utilizzati in contesti come l'analisi della varianza (ANOVA), l'analisi della devianza nei modelli lineari generalizzati (GLM) e altre procedure statistiche.
-
-Ecco un esempio per chiarire il concetto di modelli nidificati:
+I modelli nidificati sono anche utilizzati in contesti come l'analisi della varianza (ANOVA), l'analisi della devianza nei modelli lineari generalizzati (che vedremo più avanti) e altre procedure statistiche.
 
 Esempio di Modelli di Regressione Nidificati:
 
 Supponiamo di voler creare un modello di regressione per prevedere il reddito di una persona basandoci su quattro variabili indipendenti: età, istruzione, esperienza lavorativa e genere.
 Il modello completo potrebbe essere:
 
-1 - Modello Completo
+**Modello Completo**
 
 $$ Reddito = \beta_0 + \beta_1 \cdot Età + \beta_2 \cdot Istruzione + \beta_3 \cdot Esperienza + \beta_4 \cdot Genere $$ Tuttavia, potremmo essere interessati a valutare se l'aggiunta della variabile "genere" migliora significativamente la capacità predittiva del modello.
 In tal caso, il modello senza "genere" è nidificato all'interno del modello completo:
 
-2 - Modello Nidificato
+**Modello Nidificato**
 
-$$ Reddito = \beta_0 + \beta_1 \cdot Età + \beta_2 \cdot Istruzione + \beta_3 \cdot Esperienza $$
+$$ Reddito' = \beta_0 + \beta_1 \cdot Età + \beta_2 \cdot Istruzione + \beta_3 \cdot Esperienza $$
 
 In questo esempio, il Modello 1 è il modello completo e il Modello 2 è il modello nidificato senza il parametro per "genere".
-Per confrontare questi modelli, si può utilizzare il test F per determinare se l'aggiunta di "genere" contribuisce in modo significativo alla spiegazione della variazione nei redditi.
-Se il test F mostra che il modello completo è significativamente migliore del modello nidificato, possiamo concludere che "genere" è un predittore significativo.
+Valutiamo tramite un ANOVA quale dei due modelli sia considerato più significativo.
 
-In sintesi, i modelli nidificati sono utilizzati per valutare l'aggiunta o la rimozione di variabili o parametri nei modelli statistici al fine di determinare se tali modifiche migliorano significativamente la bontà di adattamento o la capacità predittiva del modello.
 
 ```{r}
 # Creiamo dati fittizi
@@ -628,18 +583,23 @@ if (anova_result[2, "Pr(>F)"] < alpha) {
   cat("La rimozione di 'genere' migliora significativamente il modello.\n")
 }
 
+# R Squared dei due modelli
+print("Modello completo ") 
+summary(modello_completo)$r.squared
+print("Modello annidato ")
+summary(modello_nidificato)$r.squared
 ```
 
 [Torna all' [Indice]]
 
-### Variable Selection in R
+### Selezione delle variabili
 
-La "variable selection" (selezione delle variabili) in R è un processo attraverso il quale si scelgono le variabili più rilevanti da includere in un modello statistico.
+La "variable selection" è un processo attraverso il quale si scelgono le variabili più rilevanti da includere in un modello statistico.
 Questo processo è utile per semplificare i modelli, migliorare la capacità predittiva e la comprensione dei dati, ridurre l'overfitting e aumentare l'efficienza computazionale.
 
 Un metodo comune per la selezione delle variabili in R coinvolge l'utilizzo dell'Information Criterion (Criterio d'Informazione) di Akaike (AIC) insieme alla funzione step().
 
-AIC (Akaike's Information Criterion):
+**AIC (Akaike's Information Criterion):**
 
 Il Criterio d'Informazione di Akaike (AIC) è una metrica che misura la qualità di un modello statistico.
 L'obiettivo dell'AIC è trovare il miglior compromesso tra la bontà di adattamento del modello ai dati e la sua complessità.
@@ -653,7 +613,7 @@ Dove:
 -   "log-likelihood" è il logaritmo della funzione di verosimiglianza del modello.
 -   "k" è il numero di parametri stimati nel modello. Un valore AIC più basso indica un modello migliore, in quanto indica un migliore adattamento ai dati con meno complessità.
 
-Funzione step():
+**Funzione step():**
 
 La funzione step() in R è utilizzata per effettuare la selezione delle variabili basata su criteri come l'AIC.
 Consente di confrontare e selezionare i modelli in modo automatico aggiungendo o rimuovendo variabili dal modello, fino a trovare il modello con l'AIC più basso.
@@ -672,10 +632,10 @@ La sintassi di base della funzione step() è la seguente:
 data(mtcars)
 
 # Crea un modello lineare iniziale
-modello_iniziale <- lm(mpg ~ ., data = mtcars)
+all <- lm(mpg ~ ., data = mtcars)
 
 # Esegui la selezione delle variabili basata su AIC
-modello_selezionato <- step(modello_iniziale, direction = "both")
+best <- step(all, direction = "backward")
 ```
 
 In questo esempio, partiamo da un modello lineare completo che utilizza tutte le variabili di mtcars, e poi utilizziamo step() per eseguire la selezione delle variabili basata su AIC.
@@ -703,7 +663,7 @@ Le interazioni si verificano quando l'effetto di una variabile categorica sul ri
 Ad esempio, l'effetto del livello di istruzione sul reddito potrebbe variare in base al genere.
 In questo caso, c'è un'interazione tra il livello di istruzione e il genere.
 
-Per esaminare le interazioni tra predittori categorici, è possibile utilizzare l'analisi della varianza (ANOVA) o i modelli lineari generalizzati (GLM).
+Per esaminare le interazioni tra predittori categorici, è possibile utilizzare l'analisi della varianza (ANOVA) o i modelli lineari generalizzati (che vedremo più avanti).
 Le interazioni possono fornire informazioni preziose sull'influenza combinata delle variabili categoriche sul risultato.
 
 ```{r}
@@ -722,22 +682,26 @@ modello <- lm(reddito ~ genere * istruzione, data = data)
 
 # Visualizziamo i risultati
 summary(modello)
+anova(modello, test = "chi")
+
+# Grafico reddito per soli maschi e sole femmine
+ggplot(data = data, aes(x = istruzione, y = reddito, fill = genere)) +
+  geom_boxplot() +
+  labs(x = "Istruzione", y = "Reddito")
 ```
 
 In questo esempio, stiamo creando dati fittizi con due predittori categorici: "genere" e "istruzione".
 Il modello lineare include un'interazione tra questi due predittori.
-L'uso di \* nell'equazione del modello indica l'interazione.
-La funzione lm viene utilizzata per adattare il modello.
 La tabella dei risultati summary(modello) mostra come i predittori categorici e l'interazione influenzano il reddito.
 
 Possiamo concludere che il genere e il livello di istruzione hanno un effetto significativo sul reddito, mentre le interazioni tra genere e istruzione non sono significative in questo modello.
-Il modello nel suo complesso è significativo e in grado di spiegare una parte significativa della variazione nel reddito.
+Il modello nel suo complesso è significativo e in grado di spiegare una parte della variazione nel reddito.
 
-#### Fattori Con Più Di Due Categorie
+**Fattori con più di due categorie:**
 
 Quando si affrontano fattori con più di due livelli (categorie), è necessario considerare come gestire queste variabili nel modello.
 In generale, un fattore con k livelli richiede la creazione di k-1 variabili dummy per evitare la "dummy variable trap".
-La "dummy variable trap" si verifica quando le variabili dummy sono linearmente dipendenti e possono portare a problemi di multicollinearità.
+Questo si verifica quando le variabili dummy sono linearmente dipendenti e possono portare a problemi di multicollinearità.
 
 Ad esempio, se abbiamo una variabile "colore" con tre livelli (rosso, verde, blu), dovremmo creare due variabili dummy per rappresentarla.
 Una rappresenterà il rosso e l'altra il verde.
@@ -814,14 +778,15 @@ Dove y sono i dati originali e λ è il parametro di trasformazione.
 È possibile calcolare il valore ottimale di λ che massimizza la normalità dei dati.
 
 ```{r}
-
 library(ggplot2)
+library(MASS)
+library(gridExtra)
+
 # Genera dati casuali
 set.seed(123)
 data <- data.frame(y = rgamma(100, shape = 2, scale = 1))
 
 # Applica la trasformazione di Box-Cox
-library(MASS)
 result <- boxcox(y ~ 1, data = data)
 lambda <- result$x[which.max(result$y)]
 transformed_data <- if (lambda == 0) log(data$y) else ((data$y^lambda - 1) / lambda)
@@ -832,20 +797,21 @@ cat("Valore ottimale di lambda: ", lambda, "\n")
 # Crea un dataframe con i dati originali e trasformati
 plot_data <- data.frame(Original = data$y, Transformed = transformed_data)
 
-par(mfrow = c(1,2))
 # Plotta i dati originali
-ggplot(plot_data, aes(x = Original)) +
+plot_original <- ggplot(plot_data, aes(x = Original)) +
   geom_histogram(binwidth = 0.5, fill = "blue", alpha = 0.7) +
   labs(title = "Distribuzione dei dati originali")
 
 # Plotta i dati trasformati
-ggplot(plot_data, aes(x = Transformed)) +
+plot_transformed <- ggplot(plot_data, aes(x = Transformed)) +
   geom_histogram(binwidth = 0.1, fill = "green", alpha = 0.7) +
   labs(title = "Distribuzione dei dati trasformati")
 
+# Mostra i grafici sulla stessa riga
+grid.arrange(plot_original, plot_transformed, ncol = 2)
 ```
 
--   Polynomials (Polinomi): Le trasformazioni polinomiali consentono di modellare relazioni non lineari tra variabili. È possibile aggiungere termini polinomiali al modello di regressione per catturare curve o relazioni più complesse. Ad esempio, si possono utilizzare polinomi di secondo grado per modellare una relazione quadratica tra una variabile indipendente e la variabile dipendente. L'aggiunta di termini polinomiali può migliorare l'adattamento del modello ai dati, ma è importante evitare di aggiungere troppi termini polinomiali per evitare il sovradattamento.
+-   Polynomials (Polinomi): Le trasformazioni polinomiali consentono di modellare relazioni non lineari tra variabili. È possibile aggiungere termini polinomiali al modello di regressione per catturare curve o relazioni più complesse. Ad esempio, si possono utilizzare polinomi di secondo grado per modellare una relazione quadratica tra una variabile indipendente e la variabile dipendente. L'aggiunta di termini polinomiali può migliorare l'adattamento del modello ai dati, ma è importante evitare di aggiungere troppi termini polinomiali per evitare l'overfitting.
 
 ```{r}
 # Modello lineare con un termine polinomiale di secondo grado
@@ -879,10 +845,8 @@ model_with_transform <- lm(Y ~ X_transformed, data = data)
 summary(model_with_transform)
 ```
 
--   Variance Stabilizing Transformations (Trasformazioni per Stabilizzare la Varianza): Queste trasformazioni sono utilizzate per stabilizzare la varianza dei residui nei modelli di regressione. In alcuni casi, la varianza dei residui può variare in modo non costante con il cambiare del valore medio delle variabili indipendenti. Questo fenomeno è noto come eteroschedasticità. Le trasformazioni, come la radice quadrata o la logaritmica, possono essere applicate alla variabile dipendente o alle variabili predittive per rendere la varianza dei residui più costante.
-
 Le trasformazioni sono strumenti potenti per adattare i modelli ai dati in modo più accurato quando le relazioni tra variabili non sono lineari o quando le assunzioni del modello non sono soddisfatte.
-Tuttavia, è importante scegliere con saggezza le trasformazioni per evitare il sovradattamento e garantire che i risultati siano interpretabili.
+Tuttavia, è importante scegliere con attenzione le trasformazioni per evitare il sovradattamento e garantire che i risultati siano interpretabili.
 
 [Torna all' [Indice]]
 
@@ -890,24 +854,17 @@ Tuttavia, è importante scegliere con saggezza le trasformazioni per evitare il 
 
 La multicollinearità si verifica quando due o più variabili indipendenti in un modello di regressione sono fortemente correlate tra loro.
 Questa correlazione tra le variabili indipendenti può rendere difficile l'interpretazione del modello e portare a stime poco affidabili dei coefficienti di regressione.
-La presenza di multicollinearità può causare un aumento dei variabili inflation factor (VIF), una misura comune utilizzata per valutare la multicollinearità tra le variabili indipendenti in un modello di regressione.
+La presenza di multicollinearità può causare un aumento del Variance Inflation Factor (VIF), una misura comune utilizzata per valutare la multicollinearità tra le variabili indipendenti in un modello di regressione.
 Un alto VIF per una variabile indica che quella variabile è fortemente correlata con le altre variabili indipendenti nel modello.
 
-Variance Inflation Factor (VIF): Il VIF è una misura utilizzata per quantificare la multicollinearità tra le variabili indipendenti in un modello di regressione.
-Un alto VIF indica che una variabile è altamente correlata con altre variabili indipendenti, il che può rendere difficile l'interpretazione del modello e portare a stime poco affidabili dei coefficienti di regressione.
+**Variance Inflation Factor:**
+
 Il VIF di ciascuna variabile indipendente è calcolato come il rapporto della varianza dell'errore standard del coefficiente di regressione stimato per quella variabile rispetto alla varianza dell'errore standard se la variabile fosse stata completamente non correlata alle altre variabili indipendenti.
 In generale, un VIF superiore a 5 o 10 è spesso considerato un segno di multicollinearità significativa.
 
 $$ 
-VIF_i = (X^TX)_{i+1,i+1}^{-1}*ns^2_{X_i}
+VIF_i = (X^TX)_{i+1,i+1}^{-1}*ns^2_{X_i} \ \  oppure \ \ VIF_i = \frac{1}{1-R^2_i}
 $$
-
-Or
-
-$$
-VIF_i = \frac{1}{1-R^2_i}
-$$
-
 ```{r}
 # Load the necessary library
 library(car)
@@ -935,9 +892,8 @@ vif_values
 ```
 
 Tutti i valori VIF sono vicini a 1, il che suggerisce che non c'è una forte multicollinearità tra le variabili predittive X1, X2, X3 e X4.
-Questo è un buon segno, poiché significa che le variabili non sono fortemente correlate tra loro, il che rende più affidabili le stime dei coefficienti di regressione nel modello.
+Questo è un buon segno, poiché significa che le variabili non sono fortemente correlate tra loro.
 
-I valori VIF ci aiuteranno a valutare l'entità della collinearità nel modello.
 Valori VIF più elevati indicano una multicollinearità più forte, e valori al di sopra di una certa soglia (ad esempio, VIF \> 5) possono suggerire la necessità di affrontare la collinearità, ad esempio, rimuovendo una delle variabili predittive correlate.
 
 [Torna all' [Indice]]
@@ -972,15 +928,6 @@ influential_points <- which(abs(standardized_residuals) > 2)
 # Visualizziamo gli indici dei punti influenti
 cat("Punti influenti basati sui residui standardizzati:", influential_points, "\n")
 
-# Calcoliamo i residui studentizzati
-studentized_residuals <- rstudent(model)
-
-# Identifichiamo i punti influenti basati sui residui studentizzati
-influential_points_studentized <- which(abs(studentized_residuals) > 2)
-
-# Visualizziamo gli indici dei punti influenti basati sui residui studentizzati
-cat("Punti influenti basati sui residui studentizzati:", influential_points_studentized, "\n")
-
 # Calcoliamo Cook's Distance
 cook_distance <- cooks.distance(model)
 
@@ -989,16 +936,25 @@ influential_points_cook <- which(cook_distance > 4 / length(cook_distance))
 
 # Visualizziamo gli indici dei punti influenti basati su Cook's Distance
 cat("Punti influenti basati su Cook's Distance:", influential_points_cook, "\n")
+
+par(mfrow = c(1,2))
+# Grafico dei punti con evidenziazione dei punti influenti
+plot(mtcars$wt, mtcars$mpg, pch = 16, main = "Scatter plot con Punti Influenti (Stan e Stud)",
+     xlab = "Peso (wt)", ylab = "Miglia per gallone (mpg)")
+points(mtcars$wt[influential_points], mtcars$mpg[influential_points], pch = 16, col = "red", cex = 1.5)
+
+
+plot(mtcars$wt, mtcars$mpg, pch = 16, main = "Scatter plot con Punti Influenti (Cook)",
+     xlab = "Peso (wt)", ylab = "Miglia per gallone (mpg)")
+points(mtcars$wt[influential_points_cook], mtcars$mpg[influential_points_cook], pch = 16, col = "red", cex = 1.5)
+
 ```
 
-#### Leverage
+**Leverage:**
 
 Il "Leverage" è una misura utilizzata nell'analisi dei dati statistici per identificare punti influenti o osservazioni atipiche in un modello di regressione.
 Questa misura valuta quanto un'osservazione può influenzare i risultati del modello, in particolare i coefficienti di regressione.
 Il leverage è calcolato sulla base delle variabili predittive e può essere utilizzato per identificare le osservazioni che hanno un impatto significativo sul modello.
-
-Calcolo del leverage: In R, puoi calcolare il leverage utilizzando la funzione hatvalues() dopo aver adattato il tuo modello di regressione.
-Il risultato sarà un vettore di valori di leverage, uno per ciascuna osservazione nel tuo dataset.
 
 Identificazione dei punti influenti: I punti con un valore di leverage significativamente più alto degli altri sono quelli che possono influenzare notevolmente il modello.
 Puoi stabilire una soglia arbitraria o utilizzare metodi statistici per determinare quali punti sono influenti.
@@ -1006,9 +962,6 @@ Ad esempio, i punti con leverage superiore a 2 volte la media possono essere con
 
 Esame dei punti influenti: Una volta identificati i punti influenti, è possibile esaminarli ulteriormente per determinare se sono effettivamente outliers o errori di misurazione.
 Potresti voler esaminare le osservazioni con elevate differenze tra i valori osservati e quelli previsti dal modello.
-
-Rimozione dei punti influenti: Se i punti influenti risultano essere effettivamente outlier o dati errati, puoi considerare l'opzione di rimuoverli dal tuo dataset.
-Questa operazione può migliorare la bontà del modello eliminando dati che potrebbero distorcerne i risultati.
 
 È importante notare che la rimozione dei punti influenti dovrebbe essere effettuata con cautela e solo se c'è una giustificazione valida.
 In alcuni casi, potresti scegliere di mantenere i punti influenti nel modello se ritieni che rappresentino informazioni significative o se hanno una spiegazione plausibile.
@@ -1049,7 +1002,7 @@ In un'applicazione pratica, è consigliabile considerare la soglia in base al co
 
 # Modelli Lineari Generalizzati {#modelli-lineari-generalizzati-glm}
 
-I Modelli Lineari Generalizzati (GLM) estendono il framework della regressione lineare per gestire un'ampia gamma di distribuzioni dei dati e tipologie di risposte.
+I GLM estendono il framework della regressione lineare per gestire un'ampia gamma di distribuzioni dei dati e tipologie di risposte.
 A differenza della regressione lineare tradizionale, i GLM possono accomodare distribuzioni di errori non normali e modellare relazioni tra predittori e risposte attraverso una funzione di collegamento.
 
 Un GLM è caratterizzato da tre componenti principali:
@@ -1063,7 +1016,7 @@ Un GLM è caratterizzato da tre componenti principali:
     Trasforma la scala della variabile di risposta e assicura che il predittore lineare copra l'intera linea reale.
     Le funzioni di collegamento comuni includono logit, probit e identità.
 
-**Formulazione Matematica:** La forma generale di un GLM può essere rappresentata come segue:
+La forma generale di un GLM può essere rappresentata come segue:
 
 $$ g(\mu) = X\beta $$
 
@@ -1104,7 +1057,7 @@ Dove:
 
 ### Devianza
 
-La devianza è una misura della discrepanza tra il modello statistico e i dati osservati nei Modelli Lineari Generalizzati (GLM).
+La devianza è una misura della discrepanza tra il modello statistico e i dati osservati nei GLM.
 In generale, la devianza è utilizzata per confrontare modelli alternativi e valutare quanto bene un modello si adatta ai dati.
 Nel contesto dei GLM, la devianza è particolarmente significativa perché tiene conto delle specifiche distribuzioni delle variabili di risposta.
 
