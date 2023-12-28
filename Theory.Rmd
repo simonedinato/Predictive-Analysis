@@ -17,31 +17,58 @@ Nel corso del documento, esploreremo vari argomenti riguardanti l'Analisi Predit
 L'obiettivo di questo documento è guidarti attraverso i concetti chiave e le pratiche nell'Analisi Predittiva, con un focus sull'utilizzo del linguaggio di programmazione R per applicare queste tecniche.
 Spero che questo documento ti aiuti a comprendere meglio questa materia di studio al fine di superare l'esame.
 
-## Summary
+## Indice
 
--   [Analisi dei residui]
--   [Decomposition sum of squares]
--   [Optimal Prediction]
--   [Empirical Covariance and Correlation]
-    -   [Empirical Covariance]
-    -   [Empirical Correlation]
--   [Multiple Linear Regression]
--   [Matrix approach to Regression]
--   [Geometrical Interpretation]
--   [Distribuzione F & Anova Table](#distribuzione-f-anova-table)
-    -   [Ipotesi]
--   [Nested Models]
--   [Variable Selection in R]
--   [Categorical Predictors and Interactions]
-    -   [Factors with More Than Two Levels]
--   [Model Checking]
--   [Transformations]
--   [Multicollinearity]
--   [Influential points]
-    -   [Leverage]
--   [Modelli Lineari Generalizzati (GLM)]
+-   [Regressione Lineare]
+    -   [Analisi dei residui]
+    -   [Scomposizione Somma Di Quadrati]
+    -   [Predizione Ottimale]
+    -   [Covarianza e Correlazione Empirica]
+        -   [Covarianza Empirica]
+        -   [Correlazione Empirica]
+-   [Regressione Lineare Multipla]
+    -   [Approcio Matriciale]
+    -   [Interpretazione Geometrica]
+    -   [Distribuzione F & Anova Table]
+        -   [Ipotesi]
+    -   [Modelli Annidati]
+    -   [Variable Selection in R]
+    -   [Predizioni Categoriche]
+        -   [Fattori Con Più Di Due Categorie]
+    -   [Controllo del Modello]
+    -   [Transformazioni]
+    -   [Multicollinearità]
+    -   [Punti Influenti]
+        -   [Leverage]
+-   [Modelli Lineari Generalizzati]
     -   [Devianza]
     -   [Residui]
+
+# Regressione Lineare
+
+La Regressione Lineare (LR) è una tecnica statistica che viene utilizzata per studiare la relazione tra due o più variabili quantitative. Il modello di regressione lineare assume che la variabile dipendente, che si desidera predire, sia una funzione lineare delle variabili indipendenti.
+
+Il modello di regressione lineare fa le seguenti assunzioni:
+
+* **Linearità:** La relazione tra la variabile dipendente e le variabili indipendenti è lineare.
+* **Normalità:** I residui sono distribuiti normalmente.
+* **Indipendenza:** I residui sono indipendenti tra loro.
+* **Eteroschedasticità:** La varianza dei residui è costante.
+
+L'equazione del modello di regressione lineare semplice è la seguente:
+
+
+$$ y = a + bx $$
+
+
+dove:
+
+* y è la variabile dipendente
+* a è l'intercetta
+* b è il coefficiente angolare
+* x è la variabile indipendente
+
+L'intercetta rappresenta il valore medio di y quando x è uguale a 0. Il coefficiente angolare rappresenta la variazione di y per ogni unità di variazione di x.
 
 ## Analisi dei residui
 
@@ -117,11 +144,11 @@ In questo caso, i residui mostrano la presenza di outlier evidenti, che possono 
 Gli outlier possono comportare problemi nei modelli statistici, specialmente nei modelli di regressione, perché possono influenzare notevolmente i risultati.
 Ad esempio, possono influenzare la stima dei coefficienti del modello e rendere il modello meno affidabile.
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Decomposition sum of squares
+## Scomposizione Somma Di Quadrati
 
-La "decomposition of sum of squares" (scomposizione della somma dei quadrati) è un concetto fondamentale nell'analisi della varianza (ANOVA) e nella regressione statistica.
+La "decomposition of sum of squares" è un concetto fondamentale nell'analisi della varianza (ANOVA) e nella regressione statistica.
 Questa tecnica aiuta a scomporre la varianza totale osservata in un insieme di dati in diverse componenti, consentendo di comprendere quanto della varianza può essere attribuito a vari fattori o errori residui.
 La formula chiave in questo contesto è:
 
@@ -169,13 +196,13 @@ R_squared <- SSR / SST
 R_squared
 ```
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Optimal Prediction
+## Predizione Ottimale
 
-L'argomento dell'"Optimal Prediction" (predizione ottimale) riguarda la determinazione di un modello predittivo che sia il migliore possibile in termini di accuratezza nel prevedere gli eventi futuri.
+L'"Optimal Prediction"  riguarda la determinazione di un modello predittivo che sia il migliore possibile in termini di accuratezza nel prevedere gli eventi futuri.
 
-L'obiettivo principale dell'optimal prediction è trovare il modello che massimizza la precisione delle previsioni, minimizzando l'errore di previsione.
+L'obiettivo principale è trovare il modello che massimizza la precisione delle previsioni, minimizzando l'errore di previsione.
 Ci sono vari metodi e tecniche per ottenere la predizione ottimale, a seconda del contesto e dei dati disponibili.
 
 ```{r}
@@ -200,9 +227,6 @@ predictions <- predict(model, newdata = test_data)
 # Valutazione delle prestazioni
 summary(model)
 
-
-cat("R-squared:", r_squared, "\n")
-
 # Grafico dei risultati
 library(ggplot2)
 ggplot(data = test_data, aes(x = speed, y = dist)) +
@@ -212,14 +236,14 @@ ggplot(data = test_data, aes(x = speed, y = dist)) +
 
 ```
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Empirical Covariance and Correlation
+## Covarianza e Correlazione Empirica
 
-L'empirical covariance e la correlazione empirica sono misure statistiche utilizzate per quantificare la relazione tra due variabili in un insieme di dati osservati.
+La covarianza e correlazione empirica sono misure statistiche utilizzate per quantificare la relazione tra due variabili in un insieme di dati osservati.
 Queste misure sono strettamente legate e sono spesso utilizzate per esaminare la relazione lineare tra due variabili.
 
-#### Empirical Covariance
+#### Covarianza Empirica
 
 La covarianza empirica è una misura della tendenza di due variabili a variare insieme.
 Indica se le due variabili crescono o diminuiscono simultaneamente (covarianza positiva) o se una aumenta mentre l'altra diminuisce (covarianza negativa).
@@ -227,11 +251,11 @@ La formula per calcolare la covarianza empirica tra due variabili X e Y in un se
 
 $$  Cov(X,Y) = \frac{1}{n-1} \sum_{i = 1}^n {(X_i - \overline{X})(Y_i - \overline{Y})} $$
 
-#### Empirical Correlation
+#### Correlazione Empirica
 
 La correlazione empirica è una versione standardizzata della covarianza empirica e misura la forza e la direzione di una relazione lineare tra due variabili.
 La correlazione empirica è sempre compresa tra -1 e 1.
-La formula per calcolare la correlazione empirica (il coefficiente di correlazione di Pearson) tra due variabili X e Y è data da:
+La formula per calcolare la correlazione empirica tra due variabili X e Y è data da:
 
 $$  Cor(X,Y) = \frac{Cov(X,Y)}{S_X \cdot S_Y} $$
 
@@ -260,12 +284,11 @@ In questo esempio, stiamo generando dati casuali per le variabili x e y.
 La variabile y è costruita come una trasformazione lineare di x con un termine di errore aggiunto.
 Poi, utilizziamo la funzione cor() per calcolare la correlazione di Pearson tra x e y.
 
-Il valore di correlazione verrà stampato a schermo.
-Un valore vicino a 1 indica una correlazione positiva forte, un valore vicino a -1 indica una correlazione negativa forte, mentre un valore vicino a 0 indica una scarsa correlazione tra le due variabili.
+Un valore vicino a 1 indica una correlazione lineare positiva forte, un valore vicino a -1 indica una correlazione lineare negativa forte, mentre un valore vicino a 0 indica una scarsa correlazione lineare tra le due variabili.
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Multiple Linear Regression
+# Regressione Lineare Multipla
 
 La "Multiple Linear Regression" (Regressione Lineare Multipla) è una tecnica di modellazione statistica utilizzata per analizzare la relazione tra una variabile dipendente (o target) e due o più variabili indipendenti (o predittive).
 Questa tecnica estende la semplice regressione lineare, che coinvolge solo una variabile indipendente, a un contesto in cui più variabili indipendenti sono coinvolte nel modello.
@@ -307,9 +330,9 @@ In sintesi, il modello di regressione lineare multipla suggerisce che il peso de
 La potenza del motore e il tempo di accelerazione non sono significative per la spiegazione di questo modello.
 Nonostante ciò il modello spiega l'83% dei della variazione nei consumi di carburante.
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Matrix approach to Regression
+## Approacio Matriciale
 
 L'approccio matriciale alla regressione è una forma alternativa di rappresentazione e risoluzione dei modelli di regressione, inclusa la regressione lineare.
 Questo approccio utilizza notazioni matematiche e matrici per semplificare i calcoli e ottenere soluzioni più efficienti in problemi di regressione lineare.
@@ -359,9 +382,9 @@ summary(model)$r.squared
 -   Esame (Examination): Un aumento nei punteggi di esame è associato a una diminuzione della fertilità nelle regioni svizzere. Questo suggerisce che un migliore stato di salute generale, misurato tramite l'esame, è correlato a una fertilità più bassa.
 -   Educazione (Education): Un aumento nel livello di educazione è correlato a una riduzione della fertilità. Le regioni con un livello di istruzione più elevato tendono ad avere una fertilità più bassa.
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Geometrical Interpretation
+## Interpretazione Geometrica
 
 L'interpretazione geometrica della regressione lineare è un approccio concettuale che utilizza uno spazio tridimensionale (o superiore) per rappresentare visivamente il modello di regressione.
 In questo spazio, ogni punto rappresenta un'osservazione nel dataset, e un piano (o iperpiano) rappresenta il modello di regressione.
@@ -369,7 +392,10 @@ L'obiettivo è trovare il piano (o iperpiano) che minimizza la somma dei quadrat
 Questo fornisce una visualizzazione intuitiva di come i coefficienti del modello vengono stimati per ottenere la migliore "ajustement" ai dati, minimizzando gli errori residui.
 L'interpretazione geometrica aiuta a comprendere i principi fondamentali della regressione lineare e può essere applicata a problemi più complessi con più variabili indipendenti.
 
-```{r}
+````{r}
+library(knitr)
+library(plotly)
+
 # Genera dati casuali
 set.seed(123)
 n <- 50
@@ -389,9 +415,6 @@ coefficients <- coef(model)
 # Visualizza i coefficienti
 print(coefficients)
 
-# Grafico dei dati e del piano di regressione
-library(rgl)
-
 # Creazione di una griglia di punti
 x1_range <- seq(min(X1), max(X1), length = 20)
 x2_range <- seq(min(X2), max(X2), length = 20)
@@ -400,15 +423,23 @@ grid <- expand.grid(X1 = x1_range, X2 = x2_range)
 # Calcolo delle previsioni del modello sulla griglia
 grid$Y_pred <- predict(model, newdata = grid)
 
-# Creazione del plot 3D
-plot3d(data$X1, data$X2, data$Y, type = "s", size = 0.5, col = "blue", xlab = "X1", ylab = "X2", zlab = "Y")
-surface3d(x = x1_range, y = x2_range, z = matrix(grid$Y_pred, nrow = length(x1_range)), color = "red", alpha = 0.7)
-```
+# Creazione del plot 3D con plotly
+plot_ly(data, x = ~X1, y = ~X2, z = ~Y, type = "scatter3d", mode = "markers", marker = list(size = 5, color = "blue")) %>%
+  add_surface(
+    x = x1_range,
+    y = x2_range,
+    z = matrix(grid$Y_pred, nrow = length(x1_range), ncol = length(x2_range), byrow = TRUE),
+    colors = "red",
+    opacity = 0.7
+  ) %>%
+  layout(scene = list(xaxis = list(title = "X1"), yaxis = list(title = "X2"), zaxis = list(title = "Y")))
+
+````
 
 L'interpretazione geometrica ci consente di vedere come il piano di regressione si adatta ai dati nello spazio tridimensionale e come i coefficienti stimati influenzano la posizione e l'inclinazione del piano rispetto ai dati osservati.
 Questo fornisce una visualizzazione intuitiva della relazione tra le variabili indipendenti e dipendenti nel contesto della regressione lineare.
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
 ## Distribuzione F & Anova Table {#distribuzione-f-anova-table}
 
@@ -530,9 +561,9 @@ if (p_value < alpha) {
 }
 ```
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Nested Models
+## Modelli Annidati
 
 Nei modelli statistici, un "nested model" (modello nidificato) si verifica quando un modello più complesso o generale può essere suddiviso o semplificato in un modello più semplice o specifico.
 Il modello più semplice è considerato "nidificato" all'interno del modello più complesso, poiché contiene un sottoinsieme di parametri o vincoli del modello più generale.
@@ -599,7 +630,7 @@ if (anova_result[2, "Pr(>F)"] < alpha) {
 
 ```
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
 ## Variable Selection in R
 
@@ -652,11 +683,11 @@ Alla fine, otteniamo il modello con l'AIC più basso, che dovrebbe essere una ve
 
 La "variable selection" utilizzando AIC e step() è un potente strumento per migliorare la qualità e l'interpretabilità dei modelli statistici, in particolare quando si hanno molti potenziali predittori.
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Categorical Predictors and Interactions
+## Predizioni Categoriche
 
-Nell'analisi statistica, i "categorical predictors" (predittori categorici) sono variabili che rappresentano categorie o gruppi distinti anziché valori numerici.
+Nell'analisi statistica, i "categorical predictors" sono variabili che rappresentano categorie o gruppi distinti anziché valori numerici.
 Queste variabili sono anche conosciute come variabili qualitative o fattori.
 Ad esempio, il genere (maschio/femmina), il livello di istruzione (scuola elementare, scuola media, laurea), o il tipo di prodotto (A, B, C) sono esempi di predittori categorici.
 Quando si utilizzano predittori categorici in un modello statistico, è importante considerare come gestire e interpretare questi dati.
@@ -702,7 +733,7 @@ La tabella dei risultati summary(modello) mostra come i predittori categorici e 
 Possiamo concludere che il genere e il livello di istruzione hanno un effetto significativo sul reddito, mentre le interazioni tra genere e istruzione non sono significative in questo modello.
 Il modello nel suo complesso è significativo e in grado di spiegare una parte significativa della variazione nel reddito.
 
-#### Factors with More Than Two Levels
+#### Fattori Con Più Di Due Categorie
 
 Quando si affrontano fattori con più di due livelli (categorie), è necessario considerare come gestire queste variabili nel modello.
 In generale, un fattore con k livelli richiede la creazione di k-1 variabili dummy per evitare la "dummy variable trap".
@@ -733,11 +764,11 @@ summary(modello)
 I risultati indicano che il colore del prodotto (rosso o verde) non ha un impatto significativo sul voto.
 L'intercetta, che rappresenta il colore "Blu," è significativa, ma il modello nel suo insieme non è molto efficace nel spiegare la variazione nei voti.
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Model Checking
+## Controllo del Modello
 
-Model Checking è una fase cruciale nell'analisi statistica, specialmente quando si adotta un modello di regressione.
+Il Model Checking è una fase cruciale nell'analisi statistica, specialmente quando si adotta un modello di regressione.
 Durante questa fase, si valuta se il modello soddisfa le principali assunzioni dei modelli lineari.
 Le quattro assunzioni principali da verificare sono:
 
@@ -757,9 +788,9 @@ Questi includono:
 Rispettare queste assunzioni è importante per garantire che le stime del modello siano affidabili e che le conclusioni siano valide.
 Se una o più di queste assunzioni non sono soddisfatte, potrebbero essere necessarie correzioni al modello o ai dati stessi.
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Transformations
+## Transformazioni
 
 Le trasformazioni sono una tecnica utilizzata nella modellazione statistica per modificare le relazioni tra variabili al fine di soddisfare meglio le assunzioni del modello.
 Le trasformazioni possono essere utili quando le relazioni tra le variabili non sono lineari o quando le assunzioni di omoschedasticità o normalità dei residui non sono soddisfatte.
@@ -853,9 +884,9 @@ summary(model_with_transform)
 Le trasformazioni sono strumenti potenti per adattare i modelli ai dati in modo più accurato quando le relazioni tra variabili non sono lineari o quando le assunzioni del modello non sono soddisfatte.
 Tuttavia, è importante scegliere con saggezza le trasformazioni per evitare il sovradattamento e garantire che i risultati siano interpretabili.
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Multicollinearity
+## Multicollinearità
 
 La multicollinearità si verifica quando due o più variabili indipendenti in un modello di regressione sono fortemente correlate tra loro.
 Questa correlazione tra le variabili indipendenti può rendere difficile l'interpretazione del modello e portare a stime poco affidabili dei coefficienti di regressione.
@@ -909,9 +940,9 @@ Questo è un buon segno, poiché significa che le variabili non sono fortemente 
 I valori VIF ci aiuteranno a valutare l'entità della collinearità nel modello.
 Valori VIF più elevati indicano una multicollinearità più forte, e valori al di sopra di una certa soglia (ad esempio, VIF \> 5) possono suggerire la necessità di affrontare la collinearità, ad esempio, rimuovendo una delle variabili predittive correlate.
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Influential points
+## Punti Influenti
 
 I punti influenti si riferiscono a osservazioni nei dati che hanno un impatto significativo sui risultati di un'analisi statistica, come una regressione lineare.
 Questi punti possono influenzare la stima dei parametri del modello, i residui, i valori p, l'R-squared e altre statistiche di rilevanza.
@@ -1014,115 +1045,122 @@ points(x[infl_points], leverage[infl_points], col = "blue", pch = 19)
 Nota che nell'esempio abbiamo utilizzato una soglia di leverage arbitraria (2 volte la media) per identificare i punti influenti.
 In un'applicazione pratica, è consigliabile considerare la soglia in base al contesto del problema e all'analisi dei dati.
 
-[Torna al [Summary]]
+[Torna all' [Indice]]
 
-## Modelli Lineari Generalizzati (GLM)
+## Modelli Lineari Generalizzati (GLM) {#modelli-lineari-generalizzati-glm}
 
-I Modelli Lineari Generalizzati (GLM) estendono il framework della regressione lineare per gestire un'ampia gamma di distribuzioni dei dati e tipologie di risposte. A differenza della regressione lineare tradizionale, i GLM possono accomodare distribuzioni di errori non normali e modellare relazioni tra predittori e risposte attraverso una funzione di collegamento.
+I Modelli Lineari Generalizzati (GLM) estendono il framework della regressione lineare per gestire un'ampia gamma di distribuzioni dei dati e tipologie di risposte.
+A differenza della regressione lineare tradizionale, i GLM possono accomodare distribuzioni di errori non normali e modellare relazioni tra predittori e risposte attraverso una funzione di collegamento.
 
 Un GLM è caratterizzato da tre componenti principali:
 
-1. **Componente Casuale (Distribuzione):**
-   La variabile di risposta \( Y \) segue una distribuzione di probabilità dalla famiglia esponenziale, che include distribuzioni comuni come normale, binomiale e di Poisson.
+1.  **Componente Casuale (Distribuzione):** La variabile di risposta $Y$ segue una distribuzione di probabilità dalla famiglia esponenziale, che include distribuzioni comuni come normale, binomiale e di Poisson.
 
-2. **Componente Sistematica (Predittore Lineare):**
-   La relazione tra i predittori e il valore atteso della risposta è espressa attraverso un predittore lineare (\( \eta \)). Il predittore lineare è una combinazione dei predittori, ognuno moltiplicato per un parametro, e si collega alla media della risposta attraverso una funzione di collegamento.
+2.  **Componente Sistematica (Predittore Lineare):** La relazione tra i predittori e il valore atteso della risposta è espressa attraverso un predittore lineare ($\eta$).
+    Il predittore lineare è una combinazione dei predittori, ognuno moltiplicato per un parametro, e si collega alla media della risposta attraverso una funzione di collegamento.
 
-3. **Funzione di Collegamento:**
-   La funzione di collegamento (\( g(\mu) \)) stabilisce il collegamento tra il predittore lineare e la media della risposta. Trasforma la scala della variabile di risposta e assicura che il predittore lineare copra l'intera linea reale. Le funzioni di collegamento comuni includono logit, probit e identità.
+3.  **Funzione di Collegamento:** La funzione di collegamento ($g(\mu)$) stabilisce il collegamento tra il predittore lineare e la media della risposta.
+    Trasforma la scala della variabile di risposta e assicura che il predittore lineare copra l'intera linea reale.
+    Le funzioni di collegamento comuni includono logit, probit e identità.
 
-**Formulazione Matematica:**
-La forma generale di un GLM può essere rappresentata come segue:
+**Formulazione Matematica:** La forma generale di un GLM può essere rappresentata come segue:
 
-\[ g(\mu) = X\beta \]
+$$ g(\mu) = X\beta $$
 
 Dove:
 
-- \( g(\mu) \) è la funzione di collegamento.
-- \( \mu \) è il valore atteso della variabile di risposta.
-- \( X \) è la matrice dei predittori.
-- \( \beta \) è il vettore dei coefficienti.
+-   $g(\mu)$ è la funzione di collegamento.
+-   $\mu$ è il valore atteso della variabile di risposta.
+-   $X$ è la matrice dei predittori.
+-   $\beta$ è il vettore dei coefficienti.
 
 **Esempi:**
 
-1. **Regressione Logistica Binaria:**
-   - **Distribuzione:** Binomiale
-   - **Funzione di Collegamento:** Logit (log-rapporti di probabilità)
-   - **Equazione:** \( \text{logit}(\mu) = X\beta \)
+1.  **Regressione Logistica Binaria:**
 
-   **Descrizione:** La funzione di collegamento logit trasforma la probabilità di successo (\( \mu \)) in un predittore lineare. In questo caso, il modello logistic descrive come la log-odds della probabilità di successo sia lineare rispetto ai predittori.
+    -   **Distribuzione:** Binomiale
+    -   **Funzione di Collegamento:** Logit (log-rapporti di probabilità)
+    -   **Equazione:** $\text{logit}(\mu) = X\beta$
 
-2. **Regressione di Poisson:**
-   - **Distribuzione:** Poisson
-   - **Funzione di Collegamento:** Log
-   - **Equazione:** \( \log(\mu) = X\beta \)
+    **Descrizione:** La funzione di collegamento logit trasforma la probabilità di successo ($\mu$) in un predittore lineare.
+    In questo caso, il modello logistic descrive come la log-odds della probabilità di successo sia lineare rispetto ai predittori.
 
-   **Descrizione:** Con la funzione di collegamento logaritmico, il modello di Poisson può gestire dati di conteggio, poiché connette il logaritmo naturale del valore atteso (\( \mu \)) a un predittore lineare.
+2.  **Regressione di Poisson:**
 
-3. **Regressione Gamma:**
-   - **Distribuzione:** Gamma
-   - **Funzione di Collegamento:** Inverso
-   - **Equazione:** \( \frac{1}{\mu} = X\beta \)
+    -   **Distribuzione:** Poisson
+    -   **Funzione di Collegamento:** Log
+    -   **Equazione:** $\log(\mu) = X\beta$
 
-   **Descrizione:** La funzione di collegamento inversa in un modello gamma è appropriata quando si modellano variabili con distribuzioni a coda pesante. Collega l'inverso del valore atteso (\( \mu \)) a un predittore lineare.
+    **Descrizione:** Con la funzione di collegamento logaritmico, il modello di Poisson può gestire dati di conteggio, poiché connette il logaritmo naturale del valore atteso ($\mu$) a un predittore lineare.
+
+3.  **Regressione Gamma:**
+
+    -   **Distribuzione:** Gamma
+    -   **Funzione di Collegamento:** Inverso
+    -   **Equazione:** $\frac{1}{\mu} = X\beta$
+
+    **Descrizione:** La funzione di collegamento inversa in un modello gamma è appropriata quando si modellano variabili con distribuzioni a coda pesante.
+    Collega l'inverso del valore atteso ($\mu$) a un predittore lineare.
 
 ### Devianza
 
-La devianza è una misura della discrepanza tra il modello statistico e i dati osservati nei Modelli Lineari Generalizzati (GLM). In generale, la devianza è utilizzata per confrontare modelli alternativi e valutare quanto bene un modello si adatta ai dati. Nel contesto dei GLM, la devianza è particolarmente significativa perché tiene conto delle specifiche distribuzioni delle variabili di risposta.
+La devianza è una misura della discrepanza tra il modello statistico e i dati osservati nei Modelli Lineari Generalizzati (GLM).
+In generale, la devianza è utilizzata per confrontare modelli alternativi e valutare quanto bene un modello si adatta ai dati.
+Nel contesto dei GLM, la devianza è particolarmente significativa perché tiene conto delle specifiche distribuzioni delle variabili di risposta.
 
-La devianza si calcola confrontando il modello fitted (previsto) con un modello null, spesso noto come modello null di saturazione. Il modello null rappresenta l'ipotesi che tutti i parametri del modello siano uguali a zero, indicando l'assenza di effetti predittori. La devianza è data dalla seguente formula:
+La devianza si calcola confrontando il modello fitted (previsto) con un modello null, spesso noto come modello null di saturazione.
+Il modello null rappresenta l'ipotesi che tutti i parametri del modello siano uguali a zero, indicando l'assenza di effetti predittori.
+La devianza è data dalla seguente formula:
 
-\[ D = 2 \times \left( \ell(\hat{\beta}) - \ell(\beta_0) \right) \]
+$$ D = 2 \times \left( \ell(\hat{\beta}) - \ell(\beta_0) \right) $$
 
 Dove:
 
-- \( \ell(\hat{\beta}) \) è il log-likelihood del modello fitted.
-- \( \ell(\beta_0) \) è il log-likelihood del modello null.
-- \( D \) è la devianza.
+-   $\ell(\hat{\beta})$ è il log-likelihood del modello fitted.
+-   $\ell(\beta_0)$ è il log-likelihood del modello null.
+-   $D$ è la devianza.
 
 Poiché i GLM utilizzano la famiglia esponenziale di distribuzioni, la devianza assume una forma specifica per diverse distribuzioni.
 
 **Formule della Verosimiglianza:**
 
-1. **Modello Normale:**
-   La verosimiglianza nel caso di una distribuzione normale è definita dalla densità di probabilità della distribuzione normale. Per una singola osservazione, la formula è:
-   \[ L(y_i | \mu_i, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(y_i - \mu_i)^2}{2\sigma^2}\right) \]
+1.  **Modello Normale:** La verosimiglianza nel caso di una distribuzione normale è definita dalla densità di probabilità della distribuzione normale.
+    Per una singola osservazione, la formula è: $$ L(y_i | \mu_i, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(y_i - \mu_i)^2}{2\sigma^2}\right) $$
 
-   Dove:
-   - \( y_i \) è l'osservazione i-esima.
-   - \( \mu_i \) è il valore atteso della variabile di risposta i-esima.
-   - \( \sigma^2 \) è la varianza.
+    Dove:
 
-2. **Modello di Poisson:**
-   La verosimiglianza nel caso di una distribuzione di Poisson è definita come segue:
-   \[ L(y_i | \lambda_i) = \frac{\lambda_i^{y_i} \exp(-\lambda_i)}{y_i!} \]
+    -   $y_i$ è l'osservazione i-esima.
+    -   $\mu_i$ è il valore atteso della variabile di risposta i-esima.
+    -   $\sigma^2$ è la varianza.
 
-   Dove:
-   - \( y_i \) è l'osservazione i-esima.
-   - \( \lambda_i \) è il valore atteso della variabile di risposta i-esima.
+2.  **Modello di Poisson:** La verosimiglianza nel caso di una distribuzione di Poisson è definita come segue: $$ L(y_i | \lambda_i) = \frac{\lambda_i^{y_i} \exp(-\lambda_i)}{y_i!} $$
 
+    Dove:
 
-**Interpretazione:**
-La devianza può essere interpretata come una misura della discrepanza tra il modello fitted e il modello null. Un valore di devianza più basso indica una migliore adattabilità del modello ai dati. Tuttavia, poiché la devianza è una misura assoluta, è spesso utilizzato il concetto di devianza residua, che è la devianza divisa per il numero di gradi di libertà del modello. Questo consente un confronto più equo tra modelli con differenti complessità.
+    -   $y_i$ è l'osservazione i-esima.
+    -   $\lambda_i$ è il valore atteso della variabile di risposta i-esima.
 
-**Contributo delle Componenti:**
-Nel contesto dei GLM, la devianza è spesso scomposta in tre componenti principali:
+**Interpretazione:** La devianza può essere interpretata come una misura della discrepanza tra il modello fitted e il modello null.
+Un valore di devianza più basso indica una migliore adattabilità del modello ai dati.
+Tuttavia, poiché la devianza è una misura assoluta, è spesso utilizzato il concetto di devianza residua, che è la devianza divisa per il numero di gradi di libertà del modello.
+Questo consente un confronto più equo tra modelli con differenti complessità.
 
-1. **Modello Fitted Deviance (\(D_{\text{fitted}}\)):**
-   Misura la discrepanza tra il modello fitted e i dati osservati.
+**Contributo delle Componenti:** Nel contesto dei GLM, la devianza è spesso scomposta in tre componenti principali:
 
-2. **Null Deviance (\(D_{\text{null}}\)):**
-   Misura la discrepanza tra il modello null e i dati osservati.
+1.  **Modello Fitted Deviance (**$D_{\text{fitted}}$): Misura la discrepanza tra il modello fitted e i dati osservati.
 
-3. **Residual Deviance (\(D_{\text{residual}}\)):**
-   Rappresenta la devianza residua, cioè la discrepanza non spiegata dal modello fitted.
+2.  **Null Deviance (**$D_{\text{null}}$): Misura la discrepanza tra il modello null e i dati osservati.
+
+3.  **Residual Deviance (**$D_{\text{residual}}$): Rappresenta la devianza residua, cioè la discrepanza non spiegata dal modello fitted.
 
 L'utilizzo di queste componenti permette di comprendere come la devianza è distribuita tra il modello fitted, il modello null e la devianza residua.
 
-**Confronto tra Modelli:**
-Il test di devianza è spesso utilizzato per confrontare modelli alternativi. La differenza nella devianza tra due modelli segue approssimativamente una distribuzione chi-quadro sotto l'ipotesi nulla che i due modelli siano equivalenti. Questo test può essere utilizzato per valutare l'aggiunta di predittori al modello o per confrontare modelli con differenti specifiche di distribuzione della risposta.
+**Confronto tra Modelli:** Il test di devianza è spesso utilizzato per confrontare modelli alternativi.
+La differenza nella devianza tra due modelli segue approssimativamente una distribuzione chi-quadro sotto l'ipotesi nulla che i due modelli siano equivalenti.
+Questo test può essere utilizzato per valutare l'aggiunta di predittori al modello o per confrontare modelli con differenti specifiche di distribuzione della risposta.
 
 **Esempio di Devianza:**
+
 ```{r}
 # Carichiamo un dataset di esempio in R
 data(mtcars)
@@ -1141,30 +1179,27 @@ In questo esempio, calcoliamo e visualizziamo la devianza residua di un modello 
 
 ### Residui
 
-**Funzione dei Residui nei GLM:**
-Nei Modelli Lineari Generalizzati (GLM), i residui svolgono un ruolo cruciale nel valutare l'adattamento del modello ai dati e nel verificare la validità delle ipotesi dietro il modello. A differenza dei Modelli Lineari (LM), i residui nei GLM sono calcolati considerando la distribuzione della risposta specifica del modello.
+**Funzione dei Residui nei GLM:** Nei Modelli Lineari Generalizzati (GLM), i residui svolgono un ruolo cruciale nel valutare l'adattamento del modello ai dati e nel verificare la validità delle ipotesi dietro il modello.
+A differenza dei Modelli Lineari (LM), i residui nei GLM sono calcolati considerando la distribuzione della risposta specifica del modello.
 
-1. **Misurare la Bontà di Adattamento:**
-   - I residui nei GLM sono utilizzati per valutare la bontà di adattamento del modello. Se il modello si adatta bene ai dati, ci si aspetta che i residui abbiano una distribuzione che riflette la distribuzione della risposta specificata nel GLM.
+1.  **Misurare la Bontà di Adattamento:**
+    -   I residui nei GLM sono utilizzati per valutare la bontà di adattamento del modello. Se il modello si adatta bene ai dati, ci si aspetta che i residui abbiano una distribuzione che riflette la distribuzione della risposta specificata nel GLM.
+2.  **Indicazioni sulla Struttura dei Dati:**
+    -   Nei GLM, la scelta della distribuzione della risposta e della funzione di legame può variare in base alla natura dei dati. I residui forniscono indicazioni sulla struttura dei dati e sulla validità delle ipotesi del modello.
+3.  **Diagnosticare Devianza:**
+    -   La devianza, una misura della differenza tra il modello completo e uno più semplice, può essere diagnosticata attraverso i residui. Residui devianti e standardized deviance residuals sono spesso utilizzati per individuare modelli non adatti ai dati.
 
-2. **Indicazioni sulla Struttura dei Dati:**
-   - Nei GLM, la scelta della distribuzione della risposta e della funzione di legame può variare in base alla natura dei dati. I residui forniscono indicazioni sulla struttura dei dati e sulla validità delle ipotesi del modello.
+**Differenze tra Residui nei GLM e nei LM:** Le principali differenze tra i residui nei GLM e nei LM riguardano la distribuzione della risposta e la funzione di legame.
 
-3. **Diagnosticare Devianza:**
-   - La devianza, una misura della differenza tra il modello completo e uno più semplice, può essere diagnosticata attraverso i residui. Residui devianti e standardized deviance residuals sono spesso utilizzati per individuare modelli non adatti ai dati.
-
-**Differenze tra Residui nei GLM e nei LM:**
-Le principali differenze tra i residui nei GLM e nei LM riguardano la distribuzione della risposta e la funzione di legame.
-
-1. **Distribuzione della Risposta:**
-   - Nei GLM, i residui sono calcolati tenendo conto della distribuzione della risposta specificata nel modello. Ad esempio, nei modelli di Poisson, i residui devono adattarsi alla distribuzione di Poisson.
-   - Nei LM, i residui sono basati sull'assunzione che la risposta sia distribuita normalmente.
-
-2. **Funzione di Legame:**
-   - La funzione di legame nei GLM determina come il valore atteso della risposta è collegato alla combinazione lineare dei predittori. La scelta della funzione di legame influenza i residui.
-   - Nei LM, la funzione di legame è identità, e i residui riflettono semplicemente la differenza tra i valori osservati e quelli previsti.
+1.  **Distribuzione della Risposta:**
+    -   Nei GLM, i residui sono calcolati tenendo conto della distribuzione della risposta specificata nel modello. Ad esempio, nei modelli di Poisson, i residui devono adattarsi alla distribuzione di Poisson.
+    -   Nei LM, i residui sono basati sull'assunzione che la risposta sia distribuita normalmente.
+2.  **Funzione di Legame:**
+    -   La funzione di legame nei GLM determina come il valore atteso della risposta è collegato alla combinazione lineare dei predittori. La scelta della funzione di legame influenza i residui.
+    -   Nei LM, la funzione di legame è identità, e i residui riflettono semplicemente la differenza tra i valori osservati e quelli previsti.
 
 **Esempio di Calcolo dei Residui in un Modello GLM:**
+
 ```{r}
 suppressWarnings({
 # Carichiamo un dataset di esempio in R con una distribuzione di Poisson
@@ -1181,16 +1216,17 @@ head(residui_devianti)
 })
 ```
 
-**Analisi dei Residui:**
-I residui devianti riflettono le differenze tra i valori osservati e quelli previsti in termini della devianza del modello. Un residuo deviante elevato indica che l'osservazione contribuisce in modo significativo alla devianza complessiva del modello, indicando un'eventuale influenza o deviazione dal modello.
+**Analisi dei Residui:** I residui devianti riflettono le differenze tra i valori osservati e quelli previsti in termini della devianza del modello.
+Un residuo deviante elevato indica che l'osservazione contribuisce in modo significativo alla devianza complessiva del modello, indicando un'eventuale influenza o deviazione dal modello.
 
-- Residui positivi indicano che l'osservazione ha contribuito più del previsto alla devianza.
-- Residui negativi indicano che l'osservazione ha contribuito meno del previsto alla devianza.
-- Residui pari a zero indicano una perfetta adattabilità dell'osservazione al modello.
+-   Residui positivi indicano che l'osservazione ha contribuito più del previsto alla devianza.
+-   Residui negativi indicano che l'osservazione ha contribuito meno del previsto alla devianza.
+-   Residui pari a zero indicano una perfetta adattabilità dell'osservazione al modello.
 
 **Esempio**
 
-Per questo esempio, useremo il dataset di esempio "mtcars" di R per creare un modello di Poisson utilizzando un modello generalizzato lineare (GLM). Lo scopo del modello sarà prevedere il numero di cilindri ("cyl") in base alle altre variabili presenti nel dataset.
+Per questo esempio, useremo il dataset di esempio "mtcars" di R per creare un modello di Poisson utilizzando un modello generalizzato lineare (GLM).
+Lo scopo del modello sarà prevedere il numero di cilindri ("cyl") in base alle altre variabili presenti nel dataset.
 
 ```{r}
 # Caricamento del dataset "mtcars"
@@ -1226,6 +1262,7 @@ previsioni <- predict(modello_glm, newdata = nuovi_dati, type = "response")
 cat("Previsioni per le prime 5 osservazioni:\n", previsioni, "\n")
 ```
 
-In questo esempio, abbiamo creato un modello di Poisson utilizzando il numero di cilindri come variabile dipendente e le altre variabili del dataset "mtcars" come variabili indipendenti. Successivamente, abbiamo eseguito un'analisi completa del modello, compresi il summary, la visualizzazione delle variabili indipendenti, l'analisi della varianza (ANOVA), il calcolo dell'R-squared e la previsione su nuovi dati.
+In questo esempio, abbiamo creato un modello di Poisson utilizzando il numero di cilindri come variabile dipendente e le altre variabili del dataset "mtcars" come variabili indipendenti.
+Successivamente, abbiamo eseguito un'analisi completa del modello, compresi il summary, la visualizzazione delle variabili indipendenti, l'analisi della varianza (ANOVA), il calcolo dell'R-squared e la previsione su nuovi dati.
 
-[[Torna al [Summary]]]
+[[Torna all' [Indice]]]
