@@ -198,8 +198,8 @@ model <- lm(dist ~ speed, data = train_data)
 predictions <- predict(model, newdata = test_data)
 
 # Valutazione delle prestazioni
-model_summary <- summary(model)
-r_squared <- model_summary$r.squared
+summary(model)
+
 
 cat("R-squared:", r_squared, "\n")
 
