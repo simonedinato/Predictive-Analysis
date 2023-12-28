@@ -17,7 +17,7 @@ Nel corso del documento, esploreremo vari argomenti riguardanti l'Analisi Predit
 L'obiettivo di questo documento è guidarti attraverso i concetti chiave e le pratiche nell'Analisi Predittiva, con un focus sull'utilizzo del linguaggio di programmazione R per applicare queste tecniche.
 Spero che questo documento ti aiuti a comprendere meglio questa materia di studio al fine di superare l'esame.
 
-## Indice
+### Indice
 
 -   [Regressione Lineare]
     -   [Analisi dei residui]
@@ -70,7 +70,7 @@ dove:
 
 L'intercetta rappresenta il valore medio di y quando x è uguale a 0. Il coefficiente angolare rappresenta la variazione di y per ogni unità di variazione di x.
 
-## Analisi dei residui
+### Analisi dei residui
 
 Serve a verificare se il modello soddisfa le assunzioni della regressione e per identificare eventuali pattern o problemi nei dati.
 
@@ -146,7 +146,7 @@ Ad esempio, possono influenzare la stima dei coefficienti del modello e rendere 
 
 [Torna all' [Indice]]
 
-## Scomposizione Somma Di Quadrati
+### Scomposizione Somma Di Quadrati
 
 La "decomposition of sum of squares" è un concetto fondamentale nell'analisi della varianza (ANOVA) e nella regressione statistica.
 Questa tecnica aiuta a scomporre la varianza totale osservata in un insieme di dati in diverse componenti, consentendo di comprendere quanto della varianza può essere attribuito a vari fattori o errori residui.
@@ -198,7 +198,7 @@ R_squared
 
 [Torna all' [Indice]]
 
-## Predizione Ottimale
+### Predizione Ottimale
 
 L'"Optimal Prediction"  riguarda la determinazione di un modello predittivo che sia il migliore possibile in termini di accuratezza nel prevedere gli eventi futuri.
 
@@ -238,7 +238,7 @@ ggplot(data = test_data, aes(x = speed, y = dist)) +
 
 [Torna all' [Indice]]
 
-## Covarianza e Correlazione Empirica
+### Covarianza e Correlazione Empirica
 
 La covarianza e correlazione empirica sono misure statistiche utilizzate per quantificare la relazione tra due variabili in un insieme di dati osservati.
 Queste misure sono strettamente legate e sono spesso utilizzate per esaminare la relazione lineare tra due variabili.
@@ -332,7 +332,7 @@ Nonostante ciò il modello spiega l'83% dei della variazione nei consumi di carb
 
 [Torna all' [Indice]]
 
-## Approcio Matriciale
+### Approcio Matriciale
 
 L'approccio matriciale alla regressione è una forma alternativa di rappresentazione e risoluzione dei modelli di regressione, inclusa la regressione lineare.
 Questo approccio utilizza notazioni matematiche e matrici per semplificare i calcoli e ottenere soluzioni più efficienti in problemi di regressione lineare.
@@ -384,7 +384,7 @@ summary(model)$r.squared
 
 [Torna all' [Indice]]
 
-## Interpretazione Geometrica
+### Interpretazione Geometrica
 
 L'interpretazione geometrica della regressione lineare è un approccio concettuale che utilizza uno spazio tridimensionale (o superiore) per rappresentare visivamente il modello di regressione.
 In questo spazio, ogni punto rappresenta un'osservazione nel dataset, e un piano (o iperpiano) rappresenta il modello di regressione.
@@ -392,7 +392,7 @@ L'obiettivo è trovare il piano (o iperpiano) che minimizza la somma dei quadrat
 Questo fornisce una visualizzazione intuitiva di come i coefficienti del modello vengono stimati per ottenere la migliore "ajustement" ai dati, minimizzando gli errori residui.
 L'interpretazione geometrica aiuta a comprendere i principi fondamentali della regressione lineare e può essere applicata a problemi più complessi con più variabili indipendenti.
 
-````{r}
+````{r, warning=FALSE}
 library(knitr)
 library(plotly)
 
@@ -424,15 +424,15 @@ grid <- expand.grid(X1 = x1_range, X2 = x2_range)
 grid$Y_pred <- predict(model, newdata = grid)
 
 # Creazione del plot 3D con plotly
-plot_ly(data, x = ~X1, y = ~X2, z = ~Y, type = "scatter3d", mode = "markers", marker = list(size = 5, color = "blue")) %>%
-  add_surface(
-    x = x1_range,
-    y = x2_range,
-    z = matrix(grid$Y_pred, nrow = length(x1_range), ncol = length(x2_range), byrow = TRUE),
-    colors = "red",
-    opacity = 0.7
-  ) %>%
-  layout(scene = list(xaxis = list(title = "X1"), yaxis = list(title = "X2"), zaxis = list(title = "Y")))
+ plot_ly(data, x = ~X1, y = ~X2, z = ~Y, type = "scatter3d", mode = "markers", marker = list(size = 5, color = "blue")) %>%
+   add_surface(
+     x = x1_range,
+     y = x2_range,
+     z = matrix(grid$Y_pred, nrow = length(x1_range), ncol = length(x2_range), byrow = TRUE),
+     colors = "red",
+     opacity = 0.7
+   ) %>%
+   layout(scene = list(xaxis = list(title = "X1"), yaxis = list(title = "X2"), zaxis = list(title = "Y")))
 
 ````
 
@@ -441,7 +441,7 @@ Questo fornisce una visualizzazione intuitiva della relazione tra le variabili i
 
 [Torna all' [Indice]]
 
-## Distribuzione F & Anova Table {#distribuzione-f-anova-table}
+### Distribuzione F & Anova Table {#distribuzione-f-anova-table}
 
 La "distribuzione F" è una distribuzione di probabilità usata per confrontare varianze o dispersioni tra gruppi o modelli di regressione.
 Viene ampiamente utilizzata nell'analisi statistica, in particolare nelle analisi della varianza (ANOVA) e nei test di significatività dei modelli di regressione.
@@ -563,7 +563,7 @@ if (p_value < alpha) {
 
 [Torna all' [Indice]]
 
-## Modelli Annidati
+### Modelli Annidati
 
 Nei modelli statistici, un "nested model" (modello nidificato) si verifica quando un modello più complesso o generale può essere suddiviso o semplificato in un modello più semplice o specifico.
 Il modello più semplice è considerato "nidificato" all'interno del modello più complesso, poiché contiene un sottoinsieme di parametri o vincoli del modello più generale.
@@ -632,7 +632,7 @@ if (anova_result[2, "Pr(>F)"] < alpha) {
 
 [Torna all' [Indice]]
 
-## Variable Selection in R
+### Variable Selection in R
 
 La "variable selection" (selezione delle variabili) in R è un processo attraverso il quale si scelgono le variabili più rilevanti da includere in un modello statistico.
 Questo processo è utile per semplificare i modelli, migliorare la capacità predittiva e la comprensione dei dati, ridurre l'overfitting e aumentare l'efficienza computazionale.
@@ -685,7 +685,7 @@ La "variable selection" utilizzando AIC e step() è un potente strumento per mig
 
 [Torna all' [Indice]]
 
-## Predizioni Categoriche
+### Predizioni Categoriche
 
 Nell'analisi statistica, i "categorical predictors" sono variabili che rappresentano categorie o gruppi distinti anziché valori numerici.
 Queste variabili sono anche conosciute come variabili qualitative o fattori.
@@ -766,7 +766,7 @@ L'intercetta, che rappresenta il colore "Blu," è significativa, ma il modello n
 
 [Torna all' [Indice]]
 
-## Controllo del Modello
+### Controllo del Modello
 
 Il Model Checking è una fase cruciale nell'analisi statistica, specialmente quando si adotta un modello di regressione.
 Durante questa fase, si valuta se il modello soddisfa le principali assunzioni dei modelli lineari.
@@ -790,7 +790,7 @@ Se una o più di queste assunzioni non sono soddisfatte, potrebbero essere neces
 
 [Torna all' [Indice]]
 
-## Transformazioni
+### Transformazioni
 
 Le trasformazioni sono una tecnica utilizzata nella modellazione statistica per modificare le relazioni tra variabili al fine di soddisfare meglio le assunzioni del modello.
 Le trasformazioni possono essere utili quando le relazioni tra le variabili non sono lineari o quando le assunzioni di omoschedasticità o normalità dei residui non sono soddisfatte.
@@ -886,7 +886,7 @@ Tuttavia, è importante scegliere con saggezza le trasformazioni per evitare il 
 
 [Torna all' [Indice]]
 
-## Multicollinearità
+### Multicollinearità
 
 La multicollinearità si verifica quando due o più variabili indipendenti in un modello di regressione sono fortemente correlate tra loro.
 Questa correlazione tra le variabili indipendenti può rendere difficile l'interpretazione del modello e portare a stime poco affidabili dei coefficienti di regressione.
@@ -942,7 +942,7 @@ Valori VIF più elevati indicano una multicollinearità più forte, e valori al 
 
 [Torna all' [Indice]]
 
-## Punti Influenti
+### Punti Influenti
 
 I punti influenti si riferiscono a osservazioni nei dati che hanno un impatto significativo sui risultati di un'analisi statistica, come una regressione lineare.
 Questi punti possono influenzare la stima dei parametri del modello, i residui, i valori p, l'R-squared e altre statistiche di rilevanza.
@@ -991,7 +991,7 @@ influential_points_cook <- which(cook_distance > 4 / length(cook_distance))
 cat("Punti influenti basati su Cook's Distance:", influential_points_cook, "\n")
 ```
 
-### Leverage
+#### Leverage
 
 Il "Leverage" è una misura utilizzata nell'analisi dei dati statistici per identificare punti influenti o osservazioni atipiche in un modello di regressione.
 Questa misura valuta quanto un'osservazione può influenzare i risultati del modello, in particolare i coefficienti di regressione.
