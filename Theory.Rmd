@@ -332,7 +332,7 @@ Nonostante ciò il modello spiega l'83% dei della variazione nei consumi di carb
 
 [Torna all' [Indice]]
 
-## Approacio Matriciale
+## Approcio Matriciale
 
 L'approccio matriciale alla regressione è una forma alternativa di rappresentazione e risoluzione dei modelli di regressione, inclusa la regressione lineare.
 Questo approccio utilizza notazioni matematiche e matrici per semplificare i calcoli e ottenere soluzioni più efficienti in problemi di regressione lineare.
@@ -1047,7 +1047,7 @@ In un'applicazione pratica, è consigliabile considerare la soglia in base al co
 
 [Torna all' [Indice]]
 
-## Modelli Lineari Generalizzati (GLM) {#modelli-lineari-generalizzati-glm}
+# Modelli Lineari Generalizzati {#modelli-lineari-generalizzati-glm}
 
 I Modelli Lineari Generalizzati (GLM) estendono il framework della regressione lineare per gestire un'ampia gamma di distribuzioni dei dati e tipologie di risposte.
 A differenza della regressione lineare tradizionale, i GLM possono accomodare distribuzioni di errori non normali e modellare relazioni tra predittori e risposte attraverso una funzione di collegamento.
