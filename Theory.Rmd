@@ -939,12 +939,12 @@ cat("Punti influenti basati su Cook's Distance:", influential_points_cook, "\n")
 
 par(mfrow = c(1,2))
 # Grafico dei punti con evidenziazione dei punti influenti
-plot(mtcars$wt, mtcars$mpg, pch = 16, main = "Scatter plot con Punti Influenti (Stan e Stud)",
+plot(mtcars$wt, mtcars$mpg, pch = 16, main = "Punti Influenti (Stan e Stud)",
      xlab = "Peso (wt)", ylab = "Miglia per gallone (mpg)")
 points(mtcars$wt[influential_points], mtcars$mpg[influential_points], pch = 16, col = "red", cex = 1.5)
 
 
-plot(mtcars$wt, mtcars$mpg, pch = 16, main = "Scatter plot con Punti Influenti (Cook)",
+plot(mtcars$wt, mtcars$mpg, pch = 16, main = "Punti Influenti (Cook)",
      xlab = "Peso (wt)", ylab = "Miglia per gallone (mpg)")
 points(mtcars$wt[influential_points_cook], mtcars$mpg[influential_points_cook], pch = 16, col = "red", cex = 1.5)
 
@@ -1093,12 +1093,12 @@ Poiché i GLM utilizzano la famiglia esponenziale di distribuzioni, la devianza 
     -   $y_i$ è l'osservazione i-esima.
     -   $\lambda_i$ è il valore atteso della variabile di risposta i-esima.
 
-**Interpretazione:** La devianza può essere interpretata come una misura della discrepanza tra il modello fitted e il modello null.
+La devianza può essere interpretata come una misura della discrepanza tra il modello fitted e il modello null.
 Un valore di devianza più basso indica una migliore adattabilità del modello ai dati.
 Tuttavia, poiché la devianza è una misura assoluta, è spesso utilizzato il concetto di devianza residua, che è la devianza divisa per il numero di gradi di libertà del modello.
 Questo consente un confronto più equo tra modelli con differenti complessità.
 
-**Contributo delle Componenti:** Nel contesto dei GLM, la devianza è spesso scomposta in tre componenti principali:
+Nel contesto dei GLM, la devianza è spesso scomposta in tre componenti principali:
 
 1.  **Modello Fitted Deviance (**$D_{\text{fitted}}$): Misura la discrepanza tra il modello fitted e i dati osservati.
 
@@ -1108,7 +1108,7 @@ Questo consente un confronto più equo tra modelli con differenti complessità.
 
 L'utilizzo di queste componenti permette di comprendere come la devianza è distribuita tra il modello fitted, il modello null e la devianza residua.
 
-**Confronto tra Modelli:** Il test di devianza è spesso utilizzato per confrontare modelli alternativi.
+Il test di devianza è spesso utilizzato per confrontare modelli alternativi.
 La differenza nella devianza tra due modelli segue approssimativamente una distribuzione chi-quadro sotto l'ipotesi nulla che i due modelli siano equivalenti.
 Questo test può essere utilizzato per valutare l'aggiunta di predittori al modello o per confrontare modelli con differenti specifiche di distribuzione della risposta.
 
@@ -1132,7 +1132,7 @@ In questo esempio, calcoliamo e visualizziamo la devianza residua di un modello 
 
 ### Residui
 
-**Funzione dei Residui nei GLM:** Nei Modelli Lineari Generalizzati (GLM), i residui svolgono un ruolo cruciale nel valutare l'adattamento del modello ai dati e nel verificare la validità delle ipotesi dietro il modello.
+Nei GLM, i residui svolgono un ruolo cruciale nel valutare l'adattamento del modello ai dati e nel verificare la validità delle ipotesi dietro il modello.
 A differenza dei Modelli Lineari (LM), i residui nei GLM sono calcolati considerando la distribuzione della risposta specifica del modello.
 
 1.  **Misurare la Bontà di Adattamento:**
@@ -1142,7 +1142,7 @@ A differenza dei Modelli Lineari (LM), i residui nei GLM sono calcolati consider
 3.  **Diagnosticare Devianza:**
     -   La devianza, una misura della differenza tra il modello completo e uno più semplice, può essere diagnosticata attraverso i residui. Residui devianti e standardized deviance residuals sono spesso utilizzati per individuare modelli non adatti ai dati.
 
-**Differenze tra Residui nei GLM e nei LM:** Le principali differenze tra i residui nei GLM e nei LM riguardano la distribuzione della risposta e la funzione di legame.
+Le principali differenze tra i residui nei GLM e nei LM riguardano la distribuzione della risposta e la funzione di legame.
 
 1.  **Distribuzione della Risposta:**
     -   Nei GLM, i residui sono calcolati tenendo conto della distribuzione della risposta specificata nel modello. Ad esempio, nei modelli di Poisson, i residui devono adattarsi alla distribuzione di Poisson.
@@ -1169,14 +1169,14 @@ head(residui_devianti)
 })
 ```
 
-**Analisi dei Residui:** I residui devianti riflettono le differenze tra i valori osservati e quelli previsti in termini della devianza del modello.
+I residui devianti riflettono le differenze tra i valori osservati e quelli previsti in termini della devianza del modello.
 Un residuo deviante elevato indica che l'osservazione contribuisce in modo significativo alla devianza complessiva del modello, indicando un'eventuale influenza o deviazione dal modello.
 
 -   Residui positivi indicano che l'osservazione ha contribuito più del previsto alla devianza.
 -   Residui negativi indicano che l'osservazione ha contribuito meno del previsto alla devianza.
 -   Residui pari a zero indicano una perfetta adattabilità dell'osservazione al modello.
 
-**Esempio**
+**Esempio:**
 
 Per questo esempio, useremo il dataset di esempio "mtcars" di R per creare un modello di Poisson utilizzando un modello generalizzato lineare (GLM).
 Lo scopo del modello sarà prevedere il numero di cilindri ("cyl") in base alle altre variabili presenti nel dataset.
