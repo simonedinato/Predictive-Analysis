@@ -1,11 +1,13 @@
 ---
 title: "Riassunto Analisi Predittiva"
-output: html_notebook
 author: "Simone Dinato"
 date: "Data di Creazione: 2023-10-20"
-version: "Versione: 0.8"
-editor_options: 
-  markdown: 
+output:
+  html_document:
+    df_print: paged
+version: 'Versione: 0.8'
+editor_options:
+  markdown:
     wrap: sentence
 ---
 
@@ -504,7 +506,7 @@ model <- lm(Punteggio ~ Genere * Trattamento, data = data)
 summary(model)
 
 # Estraiamo il valore p
-p_value <- anova_summary[[1]][["Pr(>F)"]][3]  # Usiamo [3] per estrarre il valore relativo all'interazione
+p_value <- summary(anova_result)[[1]][["Pr(>F)"]][3]  # Usiamo [3] per estrarre il valore relativo all'interazione
 
 
 # Scegliamo un livello di significatività (alpha)
