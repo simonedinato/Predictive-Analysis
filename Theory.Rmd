@@ -17,6 +17,8 @@ Nel corso del documento, esploreremo vari argomenti riguardanti l'Analisi Predit
 L'obiettivo di questo documento è guidarti attraverso i concetti chiave e le pratiche nell'Analisi Predittiva, con un focus sull'utilizzo del linguaggio di programmazione R per applicare queste tecniche.
 Spero che questo documento ti aiuti a comprendere meglio questa materia di studio al fine di superare l'esame.
 
+Per ulteriori informazioni contattami su uno dei miei social che puoi trovare [qui](https://simonedinato.github.io).
+
 ### Indice
 
 -   [Regressione Lineare]
